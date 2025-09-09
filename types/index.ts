@@ -38,6 +38,27 @@ export interface HeaderProps {
   className?: string;
 }
 
+// IGDB API types
+export interface IGDBGame {
+  id: number;
+  name: string;
+  summary?: string;
+  genres?: Array<{ name: string }>;
+  platforms?: Array<{ name: string }>;
+  cover?: { url: string };
+  rating?: number;
+  first_release_date?: number;
+}
+
+export interface IGDBResponse {
+  success: boolean;
+  data: IGDBGame[];
+  query?: string;
+  count: number;
+  limit?: number;
+  offset?: number;
+}
+
 // API response types
 export interface GameSearchResponse {
   games: Game[];
