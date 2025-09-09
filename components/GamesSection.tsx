@@ -10,16 +10,28 @@ const GamesSection: React.FC<GamesSectionProps> = ({ games, onDeleteGame, title 
         {title}
       </h2>
       
-      {/* Games Grid */}
-      <div className="grid grid-cols-1 gap-6">
-        {games.map((game) => (
-          <GameCard
-            key={game.id}
-            game={game}
-            onDelete={onDeleteGame}
-          />
-        ))}
-      </div>
+      {/* Games Grid or Empty State */}
+      {games.length > 0 ? (
+        <div className="games-grid">
+          {games.map((game) => (
+            <GameCard
+              key={game.id}
+              game={game}
+              onDelete={onDeleteGame}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="empty-state">
+          <div className="empty-state-content">
+            <div className="empty-state-icon">🎮</div>
+            <h3 className="empty-state-title">Nothing collected yet</h3>
+            <p className="empty-state-description">
+              Start exploring games and collect your favorites to see them here!
+            </p>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
