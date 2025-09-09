@@ -25,7 +25,7 @@ async function getAccessToken(): Promise<string> {
     tokenExpiry = Date.now() + (response.data.expires_in * 1000) - 60000;
     
     console.log('IGDB access token obtained successfully');
-    return cachedToken;
+    return cachedToken!; // Non-null assertion since we just assigned it
   } catch (error) {
     console.error('Failed to get IGDB access token:', error);
     throw new Error('Failed to authenticate with IGDB API');
