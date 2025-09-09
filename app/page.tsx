@@ -250,7 +250,7 @@ export default function Home(): React.JSX.Element {
             {/* No Results */}
             {isSearchFocused && searchTerm && searchResults.length === 0 && (
               <div className="search-no-results">
-                <p>No games found for "{searchTerm}"</p>
+                <p>No games found for &quot;{searchTerm}&quot;</p>
               </div>
             )}
           </div>
