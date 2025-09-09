@@ -2,8 +2,6 @@
 
 import React from 'react';
 import { Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 
 const GameCard = ({ game, onDelete }) => {
   return (
