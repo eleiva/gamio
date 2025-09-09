@@ -2,9 +2,9 @@ import React from 'react';
 import GameCard from './GameCard';
 import { GamesSectionProps } from '@/types';
 
-const GamesSection: React.FC<GamesSectionProps> = ({ games, onDeleteGame, title = "Games" }) => {
+const GamesSection: React.FC<GamesSectionProps> = ({ games, onDeleteGame, onGameClick, title = "Games", className }) => {
   return (
-    <section className="w-full">
+    <section className={`w-full ${className || ''}`}>
       {/* Section Title */}
       <h2 className="text-3xl font-bold text-black mb-8">
         {title}
@@ -18,6 +18,7 @@ const GamesSection: React.FC<GamesSectionProps> = ({ games, onDeleteGame, title 
               key={game.id}
               game={game}
               onDelete={onDeleteGame}
+              onClick={onGameClick}
             />
           ))}
         </div>

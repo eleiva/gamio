@@ -14,11 +14,10 @@ export const useIGDB = () => {
     },
   });
 
-  const searchGames = useCallback(
-    withErrorHandling(async (query: string, limit: number = 10): Promise<Game[]> => {
-      setIsLoading(true);
-      setError(null);
-      
+  const searchGames = useCallback(async (query: string, limit: number = 10): Promise<Game[]> => {
+    setIsLoading(true);
+    setError(null);
+    
       try {
         const response = await fetch('/api/igdb/search', {
           method: 'POST',
@@ -46,11 +45,10 @@ export const useIGDB = () => {
         
       } catch (error) {
         setIsLoading(false);
+        setError(error instanceof Error ? error.message : 'Unknown error');
         throw error;
       }
-    }, 'searchGames'),
-    [withErrorHandling]
-  );
+  }, []);
 
   const getPopularGames = useCallback(
     withErrorHandling(async (limit: number = 20, offset: number = 0): Promise<Game[]> => {

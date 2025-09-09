@@ -16,12 +16,14 @@ export interface Game {
 export interface GameCardProps {
   game: Game;
   onDelete: (gameId: number) => void;
+  onClick?: (game: Game) => void;
   className?: string;
 }
 
 export interface GamesSectionProps {
   games: Game[];
   onDeleteGame: (gameId: number) => void;
+  onGameClick?: (game: Game) => void;
   title?: string;
   className?: string;
 }

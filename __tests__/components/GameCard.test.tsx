@@ -18,9 +18,11 @@ const mockGame: Game = {
 
 describe('GameCard', () => {
   const mockOnDelete = jest.fn();
+  const mockOnClick = jest.fn();
 
   beforeEach(() => {
     mockOnDelete.mockClear();
+    mockOnClick.mockClear();
   });
 
   it('renders game information correctly', () => {
@@ -37,6 +39,35 @@ describe('GameCard', () => {
     fireEvent.click(deleteButton);
     
     expect(mockOnDelete).toHaveBeenCalledWith(1);
+  });
+
+  it('calls onClick when card is clicked', () => {
+    render(<GameCard game={mockGame} onDelete={mockOnDelete} onClick={mockOnClick} />);
+    
+    const card = screen.getByAltText('Test Game').closest('.game-card');
+    fireEvent.click(card!);
+    
+    expect(mockOnClick).toHaveBeenCalledWith(mockGame);
+  });
+
+  it('does not call onClick when delete button is clicked', () => {
+    render(<GameCard game={mockGame} onDelete={mockOnDelete} onClick={mockOnClick} />);
+    
+    const deleteButton = screen.getByRole('button', { name: /delete test game/i });
+    fireEvent.click(deleteButton);
+    
+    expect(mockOnDelete).toHaveBeenCalledWith(1);
+    expect(mockOnClick).not.toHaveBeenCalled();
+  });
+
+  it('works without onClick handler', () => {
+    render(<GameCard game={mockGame} onDelete={mockOnDelete} />);
+    
+    const card = screen.getByAltText('Test Game').closest('.game-card');
+    fireEvent.click(card!);
+    
+    // Should not throw error
+    expect(mockOnDelete).not.toHaveBeenCalled();
   });
 
   it('has proper accessibility attributes', () => {
