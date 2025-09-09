@@ -11,7 +11,7 @@
 
 *Organize, discover, and manage your gaming library with style*
 
-[🚀 Live Demo](https://gamio.vercel.app) • [📖 Documentation](DEVELOPMENT.md) • [🐛 Report Bug](https://github.com/eleiva/gamio/issues) • [✨ Request Feature](https://github.com/eleiva/gamio/issues)
+[🚀 Live Demo](https://gamio.weikiu.com/) • [📖 Documentation](DEVELOPMENT.md) • [🐛 Report Bug](https://github.com/eleiva/gamio/issues) • [✨ Request Feature](https://github.com/eleiva/gamio/issues)
 
 </div>
 

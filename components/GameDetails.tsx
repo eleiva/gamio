@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Star, Calendar, Tag, Heart } from 'lucide-react';
+import ImageWithFallback from './ui/ImageWithFallback';
 import { Game } from '@/types';
 
 interface GameDetailsProps {
   game: Game;
   onClose: () => void;
+  onGameCollected?: (game: Game, isCollected: boolean) => void;
 }
 
-const GameDetails: React.FC<GameDetailsProps> = ({ game, onClose }) => {
+const GameDetails: React.FC<GameDetailsProps> = ({ game, onClose, onGameCollected }) => {
   const [isCollected, setIsCollected] = useState<boolean>(false);
 
   // Check if game is already collected on component mount
@@ -39,6 +41,11 @@ const GameDetails: React.FC<GameDetailsProps> = ({ game, onClose }) => {
     }
 
     localStorage.setItem('collectedGames', JSON.stringify(gamesData));
+    
+    // Notify parent component about the collection change
+    if (onGameCollected) {
+      onGameCollected(game, !isCollected);
+    }
   };
 
   return (
@@ -62,10 +69,11 @@ const GameDetails: React.FC<GameDetailsProps> = ({ game, onClose }) => {
           {/* Game Cover and Info */}
           <div className="game-details-info">
             <div className="game-details-cover">
-              <img
+              <ImageWithFallback
                 src={game.image}
                 alt={game.title}
                 className="game-details-cover-img"
+                size={200}
               />
             </div>
             <div className="game-details-meta">

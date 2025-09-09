@@ -12,7 +12,7 @@ async function getAccessToken(): Promise<string> {
   }
 
   try {
-    console.log('Getting new IGDB access token...');
+    // Getting new IGDB access token
     
     const response = await axios.post('https://id.twitch.tv/oauth2/token', {
       client_id: process.env.IGDB_CLIENT_ID,
@@ -24,10 +24,10 @@ async function getAccessToken(): Promise<string> {
     cachedToken = response.data.access_token;
     tokenExpiry = Date.now() + (response.data.expires_in * 1000) - 60000;
     
-    console.log('IGDB access token obtained successfully');
+    // IGDB access token obtained successfully
     return cachedToken!; // Non-null assertion since we just assigned it
   } catch (error) {
-    console.error('Failed to get IGDB access token:', error);
+    // Failed to get IGDB access token
     throw new Error('Failed to authenticate with IGDB API');
   }
 }
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
                        limit ${limit}; 
                        offset ${offset};`;
 
-    console.log(`Fetching popular games (limit: ${limit}, offset: ${offset})`);
+    // Fetching popular games
 
     // Make request to IGDB API
     const response = await axios.post('https://api.igdb.com/v4/games', igdbQuery, {
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    console.log(`Found ${response.data.length} popular games`);
+    // Found popular games
 
     return NextResponse.json({
       success: true,
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('IGDB API error:', error);
+    // IGDB API error
     
     return NextResponse.json(
       { 
