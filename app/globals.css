@@ -2,7 +2,83 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom global styles */
-body {
-  font-family: system-ui, sans-serif;
+/* Import organized CSS files */
+@import '../styles/variables.css';
+@import '../styles/base.css';
+@import '../styles/components.css';
+@import '../styles/utilities.css';
+
+/* Tailwind CSS Variables for shadcn/ui compatibility */
+@layer base {
+  :root {
+    --background: var(--color-background);
+    --foreground: var(--color-foreground);
+    --card: var(--color-card);
+    --card-foreground: var(--color-card-foreground);
+    --popover: var(--color-popover);
+    --popover-foreground: var(--color-popover-foreground);
+    --primary: var(--color-primary);
+    --primary-foreground: var(--color-primary-foreground);
+    --secondary: var(--color-secondary);
+    --secondary-foreground: var(--color-secondary-foreground);
+    --muted: var(--color-muted);
+    --muted-foreground: var(--color-muted-foreground);
+    --accent: var(--color-accent);
+    --accent-foreground: var(--color-accent-foreground);
+    --destructive: var(--color-destructive);
+    --destructive-foreground: var(--color-destructive-foreground);
+    --border: var(--color-border);
+    --input: var(--color-input);
+    --ring: var(--color-ring);
+    --radius: var(--radius-md);
+  }
+
+  .dark {
+    --background: var(--color-background);
+    --foreground: var(--color-foreground);
+    --card: var(--color-card);
+    --card-foreground: var(--color-card-foreground);
+    --popover: var(--color-popover);
+    --popover-foreground: var(--color-popover-foreground);
+    --primary: var(--color-primary);
+    --primary-foreground: var(--color-primary-foreground);
+    --secondary: var(--color-secondary);
+    --secondary-foreground: var(--color-secondary-foreground);
+    --muted: var(--color-muted);
+    --muted-foreground: var(--color-muted-foreground);
+    --accent: var(--color-accent);
+    --accent-foreground: var(--color-accent-foreground);
+    --destructive: var(--color-destructive);
+    --destructive-foreground: var(--color-destructive-foreground);
+    --border: var(--color-border);
+    --input: var(--color-input);
+    --ring: var(--color-ring);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+}
+
+/* Custom background pattern */
+.keyboard-bg {
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(255, 182, 193, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(221, 160, 221, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(255, 192, 203, 0.05) 0%, transparent 50%);
+}
+
+.keyboard-keys {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+  opacity: 0.1;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='10' y='30' font-family='monospace' font-size='20' fill='%23ffb6c1'%3EW%3C/text%3E%3Ctext x='40' y='30' font-family='monospace' font-size='20' fill='%23ffb6c1'%3ES%3C/text%3E%3Ctext x='70' y='30' font-family='monospace' font-size='20' fill='%23ffb6c1'%3EA%3C/text%3E%3Ctext x='10' y='60' font-family='monospace' font-size='20' fill='%23ffb6c1'%3ED%3C/text%3E%3Ctext x='40' y='60' font-family='monospace' font-size='20' fill='%23ffb6c1'%3E%3C/text%3E%3Ctext x='70' y='60' font-family='monospace' font-size='20' fill='%23ffb6c1'%3E%3C/text%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
 }
