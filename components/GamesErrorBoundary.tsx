@@ -29,8 +29,8 @@ class GamesErrorBoundary extends Component<Props, State> {
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('GamesErrorBoundary caught an error:', error, errorInfo);
+  componentDidCatch(_error: Error, _errorInfo: ErrorInfo) {
+    // GamesErrorBoundary caught an error
     
     // You could send this to an error reporting service
     // logErrorToService(error, errorInfo);

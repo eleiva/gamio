@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
 import Header from './Header';
 import SearchBar from '@/components/SearchBar';
 import GamesSection from './GamesSection';
@@ -14,64 +13,6 @@ import { useIGDB } from '@/hooks/useIGDB';
 import { useToast } from '@/hooks/useToast';
 import { useDebounce } from '@/hooks/useDebounce';
 
-// Sample game data
-const initialGames: Game[] = [
-  {
-    id: 1,
-    title: "Dragon Ball Sparking ZERO",
-    image: "https://images.igdb.com/igdb/image/upload/t_cover_big/co6w2a.jpg",
-    genre: "Fighting",
-    platform: "PC",
-    releaseDate: "2024-10-11",
-    rating: 4.5,
-    isCompleted: false,
-    addedAt: new Date('2024-01-15')
-  },
-  {
-    id: 2,
-    title: "Blues Brothers 2000",
-    image: "https://images.igdb.com/igdb/image/upload/t_cover_big/co6w2b.jpg",
-    genre: "Action",
-    platform: "PC",
-    releaseDate: "2024-12-31",
-    rating: 3.8,
-    isCompleted: false,
-    addedAt: new Date('2024-01-16')
-  },
-  {
-    id: 3,
-    title: "Silent Hill 2",
-    image: "https://images.igdb.com/igdb/image/upload/t_cover_big/co6w2c.jpg",
-    genre: "Horror",
-    platform: "PC",
-    releaseDate: "2024-10-08",
-    rating: 4.2,
-    isCompleted: true,
-    addedAt: new Date('2024-01-17')
-  },
-  {
-    id: 4,
-    title: "Off The Grid",
-    image: "https://images.igdb.com/igdb/image/upload/t_cover_big/co6w2d.jpg",
-    genre: "Battle Royale",
-    platform: "PC",
-    releaseDate: "2024-09-05",
-    rating: 3.5,
-    isCompleted: false,
-    addedAt: new Date('2024-01-18')
-  },
-  {
-    id: 5,
-    title: "Arena Breakout Infinite",
-    image: "https://images.igdb.com/igdb/image/upload/t_cover_big/co6w2e.jpg",
-    genre: "FPS",
-    platform: "Mobile",
-    releaseDate: "2024-08-15",
-    rating: 4.0,
-    isCompleted: false,
-    addedAt: new Date('2024-01-19')
-  }
-];
 
 const GamingApp: React.FC = () => {
   const [games, setGames] = useState<Game[]>([]);
@@ -82,7 +23,7 @@ const GamingApp: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   
   const { searchGames, getPopularGames, isLoading, error } = useIGDB();
-  const { toasts, removeToast, showSuccess, showError } = useToast();
+  const { toasts, removeToast, showSuccess } = useToast();
   
   // Debounce search term to avoid too many API calls
   const debouncedSearchTerm = useDebounce(searchTerm, 500); // Increased to 500ms
@@ -106,8 +47,9 @@ const GamingApp: React.FC = () => {
   useEffect(() => {
     const performSearch = async (): Promise<void> => {
       // Cancel previous request if it exists
-      if (searchAbortController.current) {
-        searchAbortController.current.abort();
+      const currentController = searchAbortController.current;
+      if (currentController) {
+        currentController.abort();
       }
       
       if (debouncedSearchTerm.trim().length >= 2) {
@@ -129,11 +71,12 @@ const GamingApp: React.FC = () => {
     
     // Cleanup function to cancel request on unmount
     return () => {
-      if (searchAbortController.current) {
-        searchAbortController.current.abort();
+      const currentController = searchAbortController.current;
+      if (currentController) {
+        currentController.abort();
       }
     };
-  }, [debouncedSearchTerm]); // Removed searchGames from dependencies
+  }, [debouncedSearchTerm]);
 
   // Saved games should never be filtered by search - they are always shown as-is
   const savedGames = games;
@@ -173,7 +116,7 @@ const GamingApp: React.FC = () => {
           setPopularGames(popular);
         }
       } catch (err) {
-        console.error('Failed to fetch popular games:', err);
+        // Failed to fetch popular games
       }
     }
   };
@@ -193,15 +136,6 @@ const GamingApp: React.FC = () => {
     setIsSearchFocused(false);
   };
 
-  // Handle game selection from search
-  const handleGameSelect = (game: Game): void => {
-    // Add game to saved games if not already present
-    if (!games.find(g => g.id === game.id)) {
-      setGames([...games, game]);
-    }
-    setSearchTerm('');
-    setIsSearchFocused(false);
-  };
 
   // Handle game details view
   const handleGameDetails = (game: Game): void => {
@@ -349,7 +283,7 @@ const GamingApp: React.FC = () => {
           {/* No Results */}
           {isSearchFocused && searchTerm && searchResults.length === 0 && !isLoading && (
             <div className="search-no-results">
-              <p>No games found for "{searchTerm}"</p>
+              <p>No games found for &quot;{searchTerm}&quot;</p>
             </div>
           )}
 

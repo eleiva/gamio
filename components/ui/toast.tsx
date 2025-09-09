@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { CheckCircle, XCircle, X } from 'lucide-react';
 
 export interface Toast {
@@ -26,6 +26,13 @@ const ToastComponent: React.FC<ToastProps> = ({ toast, onRemove }) => {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleRemove = useCallback(() => {
+    setIsLeaving(true);
+    setTimeout(() => {
+      onRemove(toast.id);
+    }, 300); // Match CSS transition duration
+  }, [onRemove, toast.id]);
+
   useEffect(() => {
     // Auto remove after duration
     const timer = setTimeout(() => {
@@ -33,14 +40,7 @@ const ToastComponent: React.FC<ToastProps> = ({ toast, onRemove }) => {
     }, toast.duration || 3000);
 
     return () => clearTimeout(timer);
-  }, [toast.duration]);
-
-  const handleRemove = () => {
-    setIsLeaving(true);
-    setTimeout(() => {
-      onRemove(toast.id);
-    }, 300); // Match CSS transition duration
-  };
+  }, [toast.duration, handleRemove]);
 
   const getIcon = () => {
     switch (toast.type) {
