@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import { Game } from '@/types';
+import { useErrorHandler } from './useErrorHandler';
 
 // Sample game data
 const initialGames: Game[] = [
@@ -65,6 +66,13 @@ export const useGames = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  
+  const { handleError, withErrorHandling } = useErrorHandler({
+    onError: (error, context) => {
+      setError(error.message);
+      console.error(`Error in useGames${context ? ` (${context})` : ''}:`, error);
+    },
+  });
 
   // Filter games based on search term
   const filteredGames = useMemo(() => {
@@ -78,35 +86,51 @@ export const useGames = () => {
   }, [games, searchTerm]);
 
   // Add a new game
-  const addGame = useCallback((game: Omit<Game, 'id' | 'addedAt'>) => {
-    const newGame: Game = {
-      ...game,
-      id: Date.now(), // Simple ID generation
-      addedAt: new Date()
-    };
-    setGames(prev => [...prev, newGame]);
-  }, []);
+  const addGame = useCallback(
+    withErrorHandling((game: Omit<Game, 'id' | 'addedAt'>) => {
+      const newGame: Game = {
+        ...game,
+        id: Date.now(), // Simple ID generation
+        addedAt: new Date()
+      };
+      setGames(prev => [...prev, newGame]);
+      setError(null); // Clear any previous errors
+    }, 'addGame'),
+    [withErrorHandling]
+  );
 
   // Delete a game
-  const deleteGame = useCallback((gameId: number) => {
-    setGames(prev => prev.filter(game => game.id !== gameId));
-  }, []);
+  const deleteGame = useCallback(
+    withErrorHandling((gameId: number) => {
+      setGames(prev => prev.filter(game => game.id !== gameId));
+      setError(null); // Clear any previous errors
+    }, 'deleteGame'),
+    [withErrorHandling]
+  );
 
   // Update a game
-  const updateGame = useCallback((updatedGame: Game) => {
-    setGames(prev => prev.map(game => 
-      game.id === updatedGame.id ? updatedGame : game
-    ));
-  }, []);
+  const updateGame = useCallback(
+    withErrorHandling((updatedGame: Game) => {
+      setGames(prev => prev.map(game => 
+        game.id === updatedGame.id ? updatedGame : game
+      ));
+      setError(null); // Clear any previous errors
+    }, 'updateGame'),
+    [withErrorHandling]
+  );
 
   // Toggle game completion status
-  const toggleGameCompletion = useCallback((gameId: number) => {
-    setGames(prev => prev.map(game => 
-      game.id === gameId 
-        ? { ...game, isCompleted: !game.isCompleted }
-        : game
-    ));
-  }, []);
+  const toggleGameCompletion = useCallback(
+    withErrorHandling((gameId: number) => {
+      setGames(prev => prev.map(game => 
+        game.id === gameId 
+          ? { ...game, isCompleted: !game.isCompleted }
+          : game
+      ));
+      setError(null); // Clear any previous errors
+    }, 'toggleGameCompletion'),
+    [withErrorHandling]
+  );
 
   // Get games by completion status
   const getGamesByStatus = useCallback((isCompleted: boolean) => {

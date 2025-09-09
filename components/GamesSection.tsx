@@ -1,7 +1,8 @@
 import React from 'react';
 import GameCard from './GameCard';
+import { GamesSectionProps } from '@/types';
 
-const GamesSection = ({ games, onDeleteGame, title = "Games" }) => {
+const GamesSection: React.FC<GamesSectionProps> = ({ games, onDeleteGame, title = "Games" }) => {
   return (
     <section className="w-full">
       {/* Section Title */}
