@@ -1,0 +1,278 @@
+{
+  "info": {
+    "name": "IGDB API Collection",
+    "description": "Collection for testing IGDB API integration with Next.js app",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Get Access Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_id\": \"mzkckl0ya4xrox75x9pk0lf3hynpmn\",\n  \"client_secret\": \"vv31r619ynzjlhyidrfs7vakmtwuq4\",\n  \"grant_type\": \"client_credentials\"\n}"
+            },
+            "url": {
+              "raw": "https://id.twitch.tv/oauth2/token",
+              "protocol": "https",
+              "host": [
+                "id",
+                "twitch",
+                "tv"
+              ],
+              "path": [
+                "oauth2",
+                "token"
+              ]
+            },
+            "description": "Get access token for IGDB API authentication"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Next.js API Routes",
+      "item": [
+        {
+          "name": "Search Games (POST)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Halo\",\n  \"limit\": 10\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/igdb/search",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "igdb",
+                "search"
+              ]
+            },
+            "description": "Search for games using our Next.js API route"
+          },
+          "response": []
+        },
+        {
+          "name": "Search Games (GET)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/igdb/search?q=Halo&limit=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "igdb",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "Halo",
+                  "description": "Search query"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Number of results to return"
+                }
+              ]
+            },
+            "description": "Search for games using GET method"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Popular Games",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/igdb/games?limit=20&offset=0",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "igdb",
+                "games"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of games to return"
+                },
+                {
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Offset for pagination"
+                }
+              ]
+            },
+            "description": "Get list of popular games"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Direct IGDB API Calls",
+      "item": [
+        {
+          "name": "Search Games (Direct)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Client-ID",
+                "value": "mzkckl0ya4xrox75x9pk0lf3hynpmn"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "description": "Use token from Get Access Token request"
+              },
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "fields name,summary,genres.name,platforms.name,cover.url,rating,first_release_date; search \"Halo\"; limit 10;"
+            },
+            "url": {
+              "raw": "https://api.igdb.com/v4/games",
+              "protocol": "https",
+              "host": [
+                "api",
+                "igdb",
+                "com"
+              ],
+              "path": [
+                "v4",
+                "games"
+              ]
+            },
+            "description": "Direct call to IGDB API for searching games"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Popular Games (Direct)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Client-ID",
+                "value": "mzkckl0ya4xrox75x9pk0lf3hynpmn"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "description": "Use token from Get Access Token request"
+              },
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "fields name,summary,genres.name,platforms.name,cover.url,rating,first_release_date; where rating > 80 & first_release_date > 1609459200; sort rating desc; limit 20;"
+            },
+            "url": {
+              "raw": "https://api.igdb.com/v4/games",
+              "protocol": "https",
+              "host": [
+                "api",
+                "igdb",
+                "com"
+              ],
+              "path": [
+                "v4",
+                "games"
+              ]
+            },
+            "description": "Direct call to IGDB API for popular games"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Game by ID (Direct)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Client-ID",
+                "value": "mzkckl0ya4xrox75x9pk0lf3hynpmn"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "description": "Use token from Get Access Token request"
+              },
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "fields name,summary,genres.name,platforms.name,cover.url,rating,first_release_date; where id = 1942;"
+            },
+            "url": {
+              "raw": "https://api.igdb.com/v4/games",
+              "protocol": "https",
+              "host": [
+                "api",
+                "igdb",
+                "com"
+              ],
+              "path": [
+                "v4",
+                "games"
+              ]
+            },
+            "description": "Get specific game by ID (Halo: Combat Evolved)"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "description": "Base URL for your Next.js app"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "description": "Access token from Twitch OAuth (get from Get Access Token request)"
+    }
+  ]
+}
