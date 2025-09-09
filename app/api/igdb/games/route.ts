@@ -15,8 +15,8 @@ async function getAccessToken(): Promise<string> {
     console.log('Getting new IGDB access token...');
     
     const response = await axios.post('https://id.twitch.tv/oauth2/token', {
-      client_id: 'mzkckl0ya4xrox75x9pk0lf3hynpmn',
-      client_secret: 'vv31r619ynzjlhyidrfs7vakmtwuq4',
+      client_id: process.env.IGDB_CLIENT_ID,
+      client_secret: process.env.IGDB_CLIENT_SECRET,
       grant_type: 'client_credentials'
     });
 
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
     // Make request to IGDB API
     const response = await axios.post('https://api.igdb.com/v4/games', igdbQuery, {
       headers: {
-        'Client-ID': 'mzkckl0ya4xrox75x9pk0lf3hynpmn',
+        'Client-ID': process.env.IGDB_CLIENT_ID!,
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'text/plain'
       }
