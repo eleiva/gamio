@@ -70,13 +70,27 @@ const initialGames: Game[] = [
 ];
 
 const GamingApp: React.FC = () => {
-  const [games, setGames] = useState<Game[]>(initialGames);
+  const [games, setGames] = useState<Game[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [popularGames, setPopularGames] = useState<Game[]>([]);
   const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   
   const { getPopularGames, isLoading, error } = useIGDB();
+
+  // Load saved games from localStorage on component mount
+  useEffect(() => {
+    const loadSavedGames = (): void => {
+      const collectedGames = localStorage.getItem('collectedGames');
+      if (collectedGames) {
+        const gamesData: Record<string, Game> = JSON.parse(collectedGames);
+        const savedGames = Object.values(gamesData);
+        setGames(savedGames);
+      }
+    };
+
+    loadSavedGames();
+  }, []);
 
   // Filter games based on search term
   const filteredGames = games.filter(game =>
@@ -141,6 +155,15 @@ const GamingApp: React.FC = () => {
   // Handle closing game details
   const handleCloseGameDetails = (): void => {
     setSelectedGame(null);
+    // Reload saved games in case a game was collected/uncollected
+    const collectedGames = localStorage.getItem('collectedGames');
+    if (collectedGames) {
+      const gamesData: Record<string, Game> = JSON.parse(collectedGames);
+      const savedGames = Object.values(gamesData);
+      setGames(savedGames);
+    } else {
+      setGames([]);
+    }
   };
 
   // If a game is selected, show the game details page

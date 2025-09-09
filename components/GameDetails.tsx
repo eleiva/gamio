@@ -1,5 +1,5 @@
-import React from 'react';
-import { ArrowLeft, Star, Calendar, Tag } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, Star, Calendar, Tag, Heart } from 'lucide-react';
 import { Game } from '@/types';
 
 interface GameDetailsProps {
@@ -8,6 +8,39 @@ interface GameDetailsProps {
 }
 
 const GameDetails: React.FC<GameDetailsProps> = ({ game, onClose }) => {
+  const [isCollected, setIsCollected] = useState<boolean>(false);
+
+  // Check if game is already collected on component mount
+  useEffect(() => {
+    const collectedGames = localStorage.getItem('collectedGames');
+    if (collectedGames) {
+      const parsed = JSON.parse(collectedGames);
+      setIsCollected(parsed.hasOwnProperty(game.id.toString()));
+    }
+  }, [game.id]);
+
+  // Handle collect/uncollect game
+  const handleCollectGame = (): void => {
+    const collectedGames = localStorage.getItem('collectedGames');
+    let gamesData: Record<string, Game> = {};
+    
+    if (collectedGames) {
+      gamesData = JSON.parse(collectedGames);
+    }
+
+    if (isCollected) {
+      // Remove from localStorage
+      delete gamesData[game.id.toString()];
+      setIsCollected(false);
+    } else {
+      // Add to localStorage with full game data
+      gamesData[game.id.toString()] = game;
+      setIsCollected(true);
+    }
+
+    localStorage.setItem('collectedGames', JSON.stringify(gamesData));
+  };
+
   return (
     <div className="game-details-page">
       {/* Header */}
@@ -38,8 +71,13 @@ const GameDetails: React.FC<GameDetailsProps> = ({ game, onClose }) => {
             <div className="game-details-meta">
               <h1 className="game-details-title">{game.title}</h1>
               <p className="game-details-developer">{game.platform}</p>
-              <button className="game-details-collect">
-                Collect game
+              <button 
+                className={`game-details-collect ${isCollected ? 'collected' : ''}`}
+                onClick={handleCollectGame}
+                type="button"
+              >
+                <Heart className={`game-details-collect-icon ${isCollected ? 'filled' : ''}`} />
+                {isCollected ? 'Collected' : 'Collect game'}
               </button>
               
               {/* Game Stats */}
