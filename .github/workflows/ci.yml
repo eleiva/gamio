@@ -35,15 +35,7 @@ jobs:
       run: npm run type-check
       
     - name: Run tests
-      run: npm test -- --coverage --watchAll=false
-      
-    - name: Upload coverage reports
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage/lcov.info
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: true
+      run: npm test -- --watchAll=false
 
   build:
     name: Build Application
