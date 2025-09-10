@@ -26,30 +26,30 @@ const SearchBar: React.FC<SearchBarProps> = ({
   className
 }) => {
   return (
-    <div className={cn("relative", className)}>
-      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-      <Input
-        type="text"
-        value={value}
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        placeholder={placeholder}
-        className="pl-10 pr-10 h-12 text-base"
-        aria-label="Search games"
-      />
-      {(value || showClearButton) && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2"
-          onClick={onClear}
-          type="button"
-          aria-label="Clear search"
-        >
-          <X className="h-4 w-4" />
-        </Button>
-      )}
+    <div className={cn("relative w-full", className)}>
+      <div className="relative w-full">
+        <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 custom-search-icon" />
+        <input
+          type="text"
+          value={value}
+          onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          className="custom-search-bar pl-16 pr-12"
+          aria-label="Search games"
+        />
+        {(value || showClearButton) && (
+          <button
+            className="absolute right-3 top-1/2 h-6 w-6 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+            onClick={onClear}
+            type="button"
+            aria-label="Clear search"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
     </div>
   );
 };
