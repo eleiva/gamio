@@ -89,7 +89,8 @@ describe('ToastComponent', () => {
     });
     
     // Success toast
-    expect(screen.getByRole('button', { name: /close/i }).closest('.toast')).toHaveClass('toast--visible');
+    const toastElement = screen.getByRole('alert');
+    expect(toastElement).toHaveClass('translate-y-0', 'opacity-100');
     
     // Error toast
     const errorToast: Toast = { ...mockToast, type: 'error' };
@@ -97,7 +98,8 @@ describe('ToastComponent', () => {
     act(() => {
       jest.advanceTimersByTime(10);
     });
-    expect(screen.getByRole('button', { name: /close/i }).closest('.toast')).toHaveClass('toast--visible');
+    const errorToastElement = screen.getByRole('alert');
+    expect(errorToastElement).toHaveClass('translate-y-0', 'opacity-100');
     
     // Info toast
     const infoToast: Toast = { ...mockToast, type: 'info' };
@@ -105,7 +107,8 @@ describe('ToastComponent', () => {
     act(() => {
       jest.advanceTimersByTime(10);
     });
-    expect(screen.getByRole('button', { name: /close/i }).closest('.toast')).toHaveClass('toast--visible');
+    const infoToastElement = screen.getByRole('alert');
+    expect(infoToastElement).toHaveClass('translate-y-0', 'opacity-100');
     
     jest.useRealTimers();
   });
