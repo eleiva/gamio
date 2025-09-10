@@ -210,7 +210,7 @@ describe('GamesSection', () => {
       );
       
       const newestButton = screen.getByText('Newest');
-      expect(newestButton).toHaveClass('bg-primary');
+      expect(newestButton).toHaveClass('violet-button-active');
     });
   });
 });

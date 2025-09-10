@@ -36,9 +36,9 @@ describe('FilterButtons', () => {
     const lastAddedButton = screen.getByText('Last added');
     const oldestButton = screen.getByText('Oldest');
     
-    expect(newestButton).toHaveClass('bg-primary');
-    expect(lastAddedButton).toHaveClass('border');
-    expect(oldestButton).toHaveClass('border');
+    expect(newestButton).toHaveClass('violet-button-active');
+    expect(lastAddedButton).toHaveClass('violet-button-inactive');
+    expect(oldestButton).toHaveClass('violet-button-inactive');
   });
 
   it('calls onFilterChange when a button is clicked', () => {
@@ -86,7 +86,7 @@ describe('FilterButtons', () => {
          filter === 'newest' ? 'Newest' : 'Oldest')
       );
       
-      expect(currentButton).toHaveClass('bg-primary');
+      expect(currentButton).toHaveClass('violet-button-active');
       
       unmount();
     });
