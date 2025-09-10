@@ -9,7 +9,7 @@ export function convertIGDBGameToGame(igdbGame: IGDBGame): Game {
     id: igdbGame.id,
     title: igdbGame.name,
     image: igdbGame.cover?.url 
-      ? `https:${igdbGame.cover.url}` 
+      ? `https:${igdbGame.cover.url}`.replace('t_thumb', 't_cover_big')
       : '/placeholder-game.jpg', // Fallback image
     description: igdbGame.summary,
     genre: igdbGame.genres?.[0]?.name, // Take first genre

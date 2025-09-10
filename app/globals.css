@@ -68,6 +68,98 @@
   }
 }
 
+/* Pink gradient background */
+.pink-gradient-bg {
+  background: linear-gradient(180deg, 
+    #f3a6db 0%,     /* Vibrant pink at top */
+    #FFFFFF 20%     /* White after 20% of the page */
+  );
+  background-color: #FFFFFF; /* Rest of the page is white */
+  min-height: 100vh;
+}
+
+/* Floating keyboard keys */
+.floating-key {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+  color: #666;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+/* Sparkle elements */
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  animation: sparkle 3s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Custom search bar styling */
+.custom-search-bar {
+  background: white;
+  border: 2px solid #C698B8;
+  border-radius: 25px;
+  padding: 12px 40px;
+  font-size: 16px;
+  color: #666;
+  width: 100%;
+  max-width: 90vw;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-search-bar:focus {
+  outline: none;
+  border-color: #FF00AE;
+  box-shadow: 0 0 0 3px rgba(255, 0, 174, 0.1);
+}
+
+.custom-search-bar::placeholder {
+  color: #C698B8;
+}
+
+.custom-search-icon {
+  color: #C698B8;
+}
+
+/* Violet color palette */
+.violet-title {
+  color: #3C1661; /* Dark violet */
+}
+
+.violet-button-active {
+  background-color: #3C1661; /* Dark violet */
+  color: white;
+  border: none;
+}
+
+.violet-button-inactive {
+  background-color: white;
+  color: #6727A6; /* Vibrant violet */
+  border: 1px solid #E2DCE7; /* Pale violet border */
+}
+
+.violet-button-inactive:hover {
+  background-color: #E7C0DB; /* Muted lavender */
+  color: #3C1661; /* Dark violet */
+}
+
+
 /* Image placeholder styles for ImageWithFallback component */
 .no-image-placeholder {
   @apply w-full h-full flex flex-col items-center justify-center bg-muted/10 border border-dashed border-border rounded-md text-muted-foreground;
