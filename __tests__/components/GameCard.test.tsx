@@ -44,7 +44,7 @@ describe('GameCard', () => {
   it('calls onClick when card is clicked', () => {
     render(<GameCard game={mockGame} onDelete={mockOnDelete} onClick={mockOnClick} />);
     
-    const card = screen.getByAltText('Test Game').closest('.game-card');
+    const card = screen.getByAltText('Test Game').closest('div');
     fireEvent.click(card!);
     
     expect(mockOnClick).toHaveBeenCalledWith(mockGame);
@@ -63,7 +63,7 @@ describe('GameCard', () => {
   it('works without onClick handler', () => {
     render(<GameCard game={mockGame} onDelete={mockOnDelete} />);
     
-    const card = screen.getByAltText('Test Game').closest('.game-card');
+    const card = screen.getByAltText('Test Game').closest('div');
     fireEvent.click(card!);
     
     // Should not throw error

@@ -95,6 +95,6 @@ describe('ToastContainer', () => {
       <ToastContainer toasts={mockToasts} onRemoveToast={mockOnRemoveToast} />
     );
     
-    expect(container.firstChild).toHaveClass('toast-container');
+    expect(container.firstChild).toHaveClass('fixed', 'bottom-10', 'left-1/2', 'transform', '-translate-x-1/2', 'z-50', 'flex', 'flex-col', 'gap-2', 'pointer-events-none');
   });
 });
