@@ -8,7 +8,7 @@ import GamesErrorBoundary from './GamesErrorBoundary';
 import GameDetails from './GameDetails';
 import ToastContainer from './ui/toast-container';
 import ImageWithFallback from './ui/ImageWithFallback';
-import { Game } from '@/types';
+import { Game, SavedGamesFilter } from '@/types';
 import { useIGDB } from '@/hooks/useIGDB';
 import { useToast } from '@/hooks/useToast';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -21,6 +21,7 @@ const GamingApp: React.FC = () => {
   const [popularGames, setPopularGames] = useState<Game[]>([]);
   const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+  const [savedGamesFilter, setSavedGamesFilter] = useState<SavedGamesFilter>('lastAdded');
   
   const { searchGames, getPopularGames, isLoading, error } = useIGDB();
   const { toasts, removeToast, showSuccess } = useToast();
@@ -78,8 +79,41 @@ const GamingApp: React.FC = () => {
     };
   }, [debouncedSearchTerm]);
 
-  // Saved games should never be filtered by search - they are always shown as-is
-  const savedGames = games;
+  // Filter and sort saved games based on selected filter
+  const getFilteredSavedGames = (): Game[] => {
+    const sortedGames = [...games];
+    
+    switch (savedGamesFilter) {
+      case 'lastAdded':
+        // Sort by addedAt date (most recent first)
+        return sortedGames.sort((a, b) => {
+          const dateA = a.addedAt ? new Date(a.addedAt).getTime() : 0;
+          const dateB = b.addedAt ? new Date(b.addedAt).getTime() : 0;
+          return dateB - dateA; // Most recent first
+        });
+      
+      case 'newest':
+        // Sort by release date (newest first)
+        return sortedGames.sort((a, b) => {
+          const dateA = a.releaseDate ? new Date(a.releaseDate).getTime() : 0;
+          const dateB = b.releaseDate ? new Date(b.releaseDate).getTime() : 0;
+          return dateB - dateA; // Newest first
+        });
+      
+      case 'oldest':
+        // Sort by release date (oldest first)
+        return sortedGames.sort((a, b) => {
+          const dateA = a.releaseDate ? new Date(a.releaseDate).getTime() : 0;
+          const dateB = b.releaseDate ? new Date(b.releaseDate).getTime() : 0;
+          return dateA - dateB; // Oldest first
+        });
+      
+      default:
+        return sortedGames;
+    }
+  };
+
+  const savedGames = getFilteredSavedGames();
 
   // Handle game deletion
   const handleDeleteGame = (gameId: number): void => {
@@ -160,6 +194,11 @@ const GamingApp: React.FC = () => {
     } else {
       setGames([]);
     }
+  };
+
+  // Handle filter change
+  const handleFilterChange = (filter: SavedGamesFilter): void => {
+    setSavedGamesFilter(filter);
   };
 
   // If a game is selected, show the game details page
@@ -305,6 +344,9 @@ const GamingApp: React.FC = () => {
             onDeleteGame={handleDeleteGame}
             onGameClick={handleSavedGameClick}
             title="Saved Games"
+            showFilters={true}
+            currentFilter={savedGamesFilter}
+            onFilterChange={handleFilterChange}
           />
         </GamesErrorBoundary>
       </div>

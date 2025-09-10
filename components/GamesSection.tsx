@@ -1,16 +1,34 @@
 import React from 'react';
 import GameCard from './GameCard';
+import FilterButtons from './ui/filter-buttons';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { GamesSectionProps } from '@/types';
 
-const GamesSection: React.FC<GamesSectionProps> = ({ games, onDeleteGame, onGameClick, title = "Games", className }) => {
+const GamesSection: React.FC<GamesSectionProps> = ({ 
+  games, 
+  onDeleteGame, 
+  onGameClick, 
+  title = "Games", 
+  className,
+  showFilters = false,
+  currentFilter,
+  onFilterChange
+}) => {
   return (
     <section className={cn("w-full", className)}>
       {/* Section Title */}
       <h2 className="text-3xl font-bold text-foreground mb-8">
         {title}
       </h2>
+      
+      {/* Filter Buttons */}
+      {showFilters && currentFilter && onFilterChange && (
+        <FilterButtons
+          currentFilter={currentFilter}
+          onFilterChange={onFilterChange}
+        />
+      )}
       
       {/* Games Grid or Empty State */}
       {games.length > 0 ? (

@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import GamesSection from '@/components/GamesSection';
-import { Game } from '@/types';
+import { Game, SavedGamesFilter } from '@/types';
 
 const mockGames: Game[] = [
   {
@@ -32,10 +32,12 @@ const mockGames: Game[] = [
 describe('GamesSection', () => {
   const mockOnDeleteGame = jest.fn();
   const mockOnGameClick = jest.fn();
+  const mockOnFilterChange = jest.fn();
 
   beforeEach(() => {
     mockOnDeleteGame.mockClear();
     mockOnGameClick.mockClear();
+    mockOnFilterChange.mockClear();
   });
 
   it('renders games section with title', () => {
@@ -100,8 +102,9 @@ describe('GamesSection', () => {
       />
     );
     
-    const gameCards = screen.getAllByAltText(/test game/i);
-    fireEvent.click(gameCards[0].closest('.game-card')!);
+    const gameImages = screen.getAllByAltText(/test game/i);
+    const gameCard = gameImages[0].closest('[role="button"], button, div[class*="cursor-pointer"]')!;
+    fireEvent.click(gameCard);
     
     expect(mockOnGameClick).toHaveBeenCalledWith(mockGames[0]);
   });
@@ -114,8 +117,9 @@ describe('GamesSection', () => {
       />
     );
     
-    const gameCards = screen.getAllByAltText(/test game/i);
-    fireEvent.click(gameCards[0].closest('.game-card')!);
+    const gameImages = screen.getAllByAltText(/test game/i);
+    const gameCard = gameImages[0].closest('[role="button"], button, div[class*="cursor-pointer"]')!;
+    fireEvent.click(gameCard);
     
     // Should not throw error
     expect(mockOnGameClick).not.toHaveBeenCalled();
@@ -144,5 +148,69 @@ describe('GamesSection', () => {
     
     expect(container.firstChild).toHaveClass('w-full');
     expect(container.firstChild).toHaveClass('custom-class');
+  });
+
+  describe('Filter functionality', () => {
+    it('renders filter buttons when showFilters is true', () => {
+      render(
+        <GamesSection
+          games={mockGames}
+          onDeleteGame={mockOnDeleteGame}
+          showFilters={true}
+          currentFilter="lastAdded"
+          onFilterChange={mockOnFilterChange}
+        />
+      );
+      
+      expect(screen.getByText('Last added')).toBeInTheDocument();
+      expect(screen.getByText('Newest')).toBeInTheDocument();
+      expect(screen.getByText('Oldest')).toBeInTheDocument();
+    });
+
+    it('does not render filter buttons when showFilters is false', () => {
+      render(
+        <GamesSection
+          games={mockGames}
+          onDeleteGame={mockOnDeleteGame}
+          showFilters={false}
+        />
+      );
+      
+      expect(screen.queryByText('Last added')).not.toBeInTheDocument();
+      expect(screen.queryByText('Newest')).not.toBeInTheDocument();
+      expect(screen.queryByText('Oldest')).not.toBeInTheDocument();
+    });
+
+    it('calls onFilterChange when filter button is clicked', () => {
+      render(
+        <GamesSection
+          games={mockGames}
+          onDeleteGame={mockOnDeleteGame}
+          showFilters={true}
+          currentFilter="lastAdded"
+          onFilterChange={mockOnFilterChange}
+        />
+      );
+      
+      const newestButton = screen.getByText('Newest');
+      fireEvent.click(newestButton);
+      
+      expect(mockOnFilterChange).toHaveBeenCalledWith('newest');
+    });
+
+    it('highlights the current filter button', () => {
+      render(
+        <GamesSection
+          games={mockGames}
+          onDeleteGame={mockOnDeleteGame}
+          showFilters={true}
+          currentFilter="newest"
+          onFilterChange={mockOnFilterChange}
+        />
+      );
+      
+      const newestButton = screen.getByText('Newest');
+      expect(newestButton).toHaveClass('bg-primary');
+    });
   });
 });

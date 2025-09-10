@@ -40,8 +40,12 @@ const GameDetails: React.FC<GameDetailsProps> = ({ game, onClose, onGameCollecte
       delete gamesData[game.id.toString()];
       setIsCollected(false);
     } else {
-      // Add to localStorage with full game data
-      gamesData[game.id.toString()] = game;
+      // Add to localStorage with full game data and current timestamp
+      const gameWithTimestamp = {
+        ...game,
+        addedAt: new Date()
+      };
+      gamesData[game.id.toString()] = gameWithTimestamp;
       setIsCollected(true);
     }
 
