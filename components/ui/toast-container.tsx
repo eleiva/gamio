@@ -14,7 +14,7 @@ const ToastContainer: React.FC<ToastContainerProps> = ({ toasts, onRemoveToast }
   }
 
   return (
-    <div className="toast-container">
+    <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2 pointer-events-none">
       {toasts.map((toast) => (
         <ToastComponent
           key={toast.id}
