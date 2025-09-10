@@ -123,9 +123,15 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.custom-search-bar.with-results {
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-bottom: none;
+}
+
 .custom-search-bar:focus {
   outline: none;
-  border-color: #FF00AE;
+  border-color: #C698B8;
   box-shadow: 0 0 0 3px rgba(255, 0, 174, 0.1);
 }
 
@@ -135,6 +141,15 @@
 
 .custom-search-icon {
   color: #C698B8;
+}
+
+/* Search results dropdown styling */
+.custom-search-dropdown {
+  background: white;
+  border: 2px solid #C698B8;
+  border-top: none;
+  border-radius: 0 0 25px 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Violet color palette */

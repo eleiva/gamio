@@ -262,7 +262,7 @@ const GamingApp: React.FC = () => {
 
           {/* Search Results */}
           {isSearchFocused && searchTerm && searchResults.length > 0 && (
-            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg max-h-80 overflow-y-auto z-50">
+            <div className="absolute top-full left-0 right-0 custom-search-dropdown max-h-80 overflow-y-auto z-50">
               <div className="p-2">
                 {searchResults.map((game) => (
                   <button
@@ -292,7 +292,7 @@ const GamingApp: React.FC = () => {
 
           {/* Popular Games */}
           {isSearchFocused && !searchTerm && popularGames.length > 0 && (
-            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg max-h-80 overflow-y-auto z-50">
+            <div className="absolute top-full left-0 right-0 custom-search-dropdown max-h-80 overflow-y-auto z-50">
               <div className="p-2">
                 {popularGames.map((game) => (
                   <button
@@ -322,32 +322,32 @@ const GamingApp: React.FC = () => {
 
           {/* Loading States */}
           {isSearchFocused && searchTerm && isLoading && (
-            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg p-4 text-center z-50">
+            <div className="absolute top-full left-0 right-0 bg-background border-2 border-pink-300 rounded-b-lg shadow-lg p-4 text-center z-50">
               <p className="text-muted-foreground">Searching games...</p>
             </div>
           )}
 
           {isSearchFocused && !searchTerm && popularGames.length === 0 && isLoading && (
-            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg p-4 text-center z-50">
+            <div className="absolute top-full left-0 right-0 bg-background border-2 border-pink-300 rounded-b-lg shadow-lg p-4 text-center z-50">
               <p className="text-muted-foreground">Loading popular games...</p>
             </div>
           )}
 
           {/* No Results */}
           {isSearchFocused && searchTerm && searchResults.length === 0 && !isLoading && (
-            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg p-4 text-center z-50">
+            <div className="absolute top-full left-0 right-0 bg-background border-2 border-pink-300 rounded-b-lg shadow-lg p-4 text-center z-50">
               <p className="text-muted-foreground">No games found for &quot;{searchTerm}&quot;</p>
             </div>
           )}
 
           {isSearchFocused && !searchTerm && popularGames.length === 0 && error && (
-            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg p-4 text-center z-50">
+            <div className="absolute top-full left-0 right-0 bg-background border-2 border-pink-300 rounded-b-lg shadow-lg p-4 text-center z-50">
               <p className="text-destructive">Failed to load popular games</p>
             </div>
           )}
 
           {isSearchFocused && searchTerm && error && (
-            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg p-4 text-center z-50">
+            <div className="absolute top-full left-0 right-0 bg-background border-2 border-pink-300 rounded-b-lg shadow-lg p-4 text-center z-50">
               <p className="text-destructive">Search failed. Please try again.</p>
             </div>
           )}

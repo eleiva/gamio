@@ -12,6 +12,7 @@ interface SearchBarProps {
   onClear?: () => void;
   placeholder?: string;
   showClearButton?: boolean;
+  showResults?: boolean;
   className?: string;
 }
 
@@ -23,6 +24,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   onClear,
   placeholder = "Search games...",
   showClearButton = false,
+  showResults = false,
   className
 }) => {
   return (
@@ -36,7 +38,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           onFocus={onFocus}
           onBlur={onBlur}
           placeholder={placeholder}
-          className="custom-search-bar pl-16 pr-12"
+          className={cn("custom-search-bar pl-16 pr-12", showResults && "with-results")}
           aria-label="Search games"
         />
         {(value || showClearButton) && (
