@@ -26,6 +26,9 @@ export interface GamesSectionProps {
   onGameClick?: (game: Game) => void;
   title?: string;
   className?: string;
+  showFilters?: boolean;
+  currentFilter?: SavedGamesFilter;
+  onFilterChange?: (filter: SavedGamesFilter) => void;
 }
 
 export interface SearchBarProps {
@@ -131,6 +134,9 @@ export interface Theme {
 // Utility types
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 export type RequiredFields<T, K extends keyof T> = T & Required<Pick<T, K>>;
+
+// Filter types
+export type SavedGamesFilter = 'lastAdded' | 'newest' | 'oldest';
 
 // Event handler types
 export type ClickHandler = (e: React.MouseEvent<HTMLButtonElement>) => void;

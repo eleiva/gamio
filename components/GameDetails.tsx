@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Star, Calendar, Tag, Heart } from 'lucide-react';
 import ImageWithFallback from './ui/ImageWithFallback';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 import { Game } from '@/types';
 
 interface GameDetailsProps {
@@ -35,8 +40,12 @@ const GameDetails: React.FC<GameDetailsProps> = ({ game, onClose, onGameCollecte
       delete gamesData[game.id.toString()];
       setIsCollected(false);
     } else {
-      // Add to localStorage with full game data
-      gamesData[game.id.toString()] = game;
+      // Add to localStorage with full game data and current timestamp
+      const gameWithTimestamp = {
+        ...game,
+        addedAt: new Date()
+      };
+      gamesData[game.id.toString()] = gameWithTimestamp;
       setIsCollected(true);
     }
 
@@ -49,89 +58,105 @@ const GameDetails: React.FC<GameDetailsProps> = ({ game, onClose, onGameCollecte
   };
 
   return (
-    <div className="game-details-page">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="game-details-header">
-        <button
-          className="game-details-back"
+      <div className="flex items-center gap-4 pb-4 border-b">
+        <Button
+          variant="ghost"
           onClick={onClose}
           type="button"
           aria-label="Go back"
+          className="flex items-center gap-2"
         >
-          <ArrowLeft className="game-details-back-icon" />
+          <ArrowLeft className="h-4 w-4" />
           <span>Back</span>
-        </button>
+        </Button>
       </div>
 
       {/* Game Content */}
-      <div className="game-details-content">
-        <div className="game-details-main">
-          {/* Game Cover and Info */}
-          <div className="game-details-info">
-            <div className="game-details-cover">
-              <ImageWithFallback
-                src={game.image}
-                alt={game.title}
-                className="game-details-cover-img"
-                size={200}
-              />
+      <div className="space-y-8">
+        {/* Game Cover and Info */}
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="flex-shrink-0">
+            <ImageWithFallback
+              src={game.image}
+              alt={game.title}
+              className="w-48 h-64 md:w-56 md:h-80 object-cover rounded-lg shadow-lg"
+              size={200}
+            />
+          </div>
+          <div className="flex-1 space-y-4">
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">{game.title}</h1>
+              <p className="text-lg text-muted-foreground">{game.platform}</p>
             </div>
-            <div className="game-details-meta">
-              <h1 className="game-details-title">{game.title}</h1>
-              <p className="game-details-developer">{game.platform}</p>
-              <button 
-                className={`game-details-collect ${isCollected ? 'collected' : ''}`}
-                onClick={handleCollectGame}
-                type="button"
-              >
-                <Heart className={`game-details-collect-icon ${isCollected ? 'filled' : ''}`} />
-                {isCollected ? 'Collected' : 'Collect game'}
-              </button>
-              
-              {/* Game Stats */}
-              <div className="game-details-stats">
-                {game.rating && (
-                  <div className="game-details-stat">
-                    <Star className="game-details-stat-icon" />
-                    <span>Rating: {game.rating}</span>
-                  </div>
-                )}
-                {game.releaseDate && (
-                  <div className="game-details-stat">
-                    <Calendar className="game-details-stat-icon" />
-                    <span>Release: {new Date(game.releaseDate).toLocaleDateString('en-US', { 
-                      month: 'numeric', 
-                      day: 'numeric', 
-                      year: 'numeric' 
-                    })}</span>
-                  </div>
-                )}
-                {game.genre && (
-                  <div className="game-details-stat">
-                    <Tag className="game-details-stat-icon" />
-                    <span>Genre: {game.genre}</span>
-                  </div>
-                )}
-              </div>
+            
+            <Button 
+              variant={isCollected ? "destructive" : "default"}
+              size="lg"
+              onClick={handleCollectGame}
+              type="button"
+              className="flex items-center gap-2"
+            >
+              <Heart className={cn("h-4 w-4", isCollected && "fill-current")} />
+              {isCollected ? 'Collected' : 'Collect game'}
+            </Button>
+            
+            {/* Game Stats */}
+            <div className="space-y-2">
+              {game.rating && (
+                <div className="flex items-center gap-2 text-sm">
+                  <Star className="h-4 w-4 text-muted-foreground" />
+                  <span>Rating: {game.rating}</span>
+                </div>
+              )}
+              {game.releaseDate && (
+                <div className="flex items-center gap-2 text-sm">
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <span>Release: {new Date(game.releaseDate).toLocaleDateString('en-US', { 
+                    month: 'numeric', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                  })}</span>
+                </div>
+              )}
+              {game.genre && (
+                <div className="flex items-center gap-2 text-sm">
+                  <Tag className="h-4 w-4 text-muted-foreground" />
+                  <span>Genre: {game.genre}</span>
+                </div>
+              )}
             </div>
           </div>
-
-          {/* Summary */}
-          {game.description && (
-            <div className="game-details-summary">
-              <h2 className="game-details-section-title">Summary</h2>
-              <p className="game-details-description">{game.description}</p>
-            </div>
-          )}
-
-          {/* Platforms */}
-          {game.platform && (
-            <div className="game-details-platforms">
-              <h2 className="game-details-section-title">Platforms</h2>
-              <p className="game-details-platform-list">{game.platform}</p>
-            </div>
-          )}
         </div>
+
+        <Separator />
+
+        {/* Summary */}
+        {game.description && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Summary</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-foreground leading-relaxed">{game.description}</p>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Platforms */}
+        {game.platform && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Platforms</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="secondary">{game.platform}</Badge>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );

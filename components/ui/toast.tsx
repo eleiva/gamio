@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { CheckCircle, XCircle, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 export interface Toast {
   id: string;
@@ -45,36 +47,42 @@ const ToastComponent: React.FC<ToastProps> = ({ toast, onRemove }) => {
   const getIcon = () => {
     switch (toast.type) {
       case 'success':
-        return <CheckCircle className="toast-icon toast-icon--success" />;
+        return <CheckCircle className="h-5 w-5 text-green-600" />;
       case 'error':
-        return <XCircle className="toast-icon toast-icon--error" />;
+        return <XCircle className="h-5 w-5 text-destructive" />;
       default:
-        return <CheckCircle className="toast-icon toast-icon--info" />;
+        return <CheckCircle className="h-5 w-5 text-primary" />;
     }
   };
 
   return (
     <div 
-      className={`toast ${isVisible ? 'toast--visible' : ''} ${isLeaving ? 'toast--leaving' : ''}`}
+      className={cn(
+        "bg-background border border-border rounded-lg shadow-lg p-4 min-w-80 max-w-96 pointer-events-auto transform transition-all duration-300",
+        isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0",
+        isLeaving && "translate-y-[-100px] opacity-0"
+      )}
       role="alert"
       aria-live="polite"
     >
-      <div className="toast-content">
+      <div className="flex items-start gap-3 relative">
         {getIcon()}
-        <div className="toast-text">
-          <div className="toast-title">{toast.title}</div>
+        <div className="flex-1 min-w-0 pr-8">
+          <div className="text-sm font-medium text-foreground mb-1">{toast.title}</div>
           {toast.message && (
-            <div className="toast-message">{toast.message}</div>
+            <div className="text-xs text-muted-foreground">{toast.message}</div>
           )}
         </div>
-        <button
-          className="toast-close"
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute top-0 right-0 h-6 w-6"
           onClick={handleRemove}
           type="button"
           aria-label="Close notification"
         >
-          <X className="toast-close-icon" />
-        </button>
+          <X className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );

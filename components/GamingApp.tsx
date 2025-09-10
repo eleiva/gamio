@@ -8,7 +8,7 @@ import GamesErrorBoundary from './GamesErrorBoundary';
 import GameDetails from './GameDetails';
 import ToastContainer from './ui/toast-container';
 import ImageWithFallback from './ui/ImageWithFallback';
-import { Game } from '@/types';
+import { Game, SavedGamesFilter } from '@/types';
 import { useIGDB } from '@/hooks/useIGDB';
 import { useToast } from '@/hooks/useToast';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -21,6 +21,7 @@ const GamingApp: React.FC = () => {
   const [popularGames, setPopularGames] = useState<Game[]>([]);
   const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+  const [savedGamesFilter, setSavedGamesFilter] = useState<SavedGamesFilter>('lastAdded');
   
   const { searchGames, getPopularGames, isLoading, error } = useIGDB();
   const { toasts, removeToast, showSuccess } = useToast();
@@ -78,8 +79,41 @@ const GamingApp: React.FC = () => {
     };
   }, [debouncedSearchTerm]);
 
-  // Saved games should never be filtered by search - they are always shown as-is
-  const savedGames = games;
+  // Filter and sort saved games based on selected filter
+  const getFilteredSavedGames = (): Game[] => {
+    const sortedGames = [...games];
+    
+    switch (savedGamesFilter) {
+      case 'lastAdded':
+        // Sort by addedAt date (most recent first)
+        return sortedGames.sort((a, b) => {
+          const dateA = a.addedAt ? new Date(a.addedAt).getTime() : 0;
+          const dateB = b.addedAt ? new Date(b.addedAt).getTime() : 0;
+          return dateB - dateA; // Most recent first
+        });
+      
+      case 'newest':
+        // Sort by release date (newest first)
+        return sortedGames.sort((a, b) => {
+          const dateA = a.releaseDate ? new Date(a.releaseDate).getTime() : 0;
+          const dateB = b.releaseDate ? new Date(b.releaseDate).getTime() : 0;
+          return dateB - dateA; // Newest first
+        });
+      
+      case 'oldest':
+        // Sort by release date (oldest first)
+        return sortedGames.sort((a, b) => {
+          const dateA = a.releaseDate ? new Date(a.releaseDate).getTime() : 0;
+          const dateB = b.releaseDate ? new Date(b.releaseDate).getTime() : 0;
+          return dateA - dateB; // Oldest first
+        });
+      
+      default:
+        return sortedGames;
+    }
+  };
+
+  const savedGames = getFilteredSavedGames();
 
   // Handle game deletion
   const handleDeleteGame = (gameId: number): void => {
@@ -162,11 +196,16 @@ const GamingApp: React.FC = () => {
     }
   };
 
+  // Handle filter change
+  const handleFilterChange = (filter: SavedGamesFilter): void => {
+    setSavedGamesFilter(filter);
+  };
+
   // If a game is selected, show the game details page
   if (selectedGame) {
     return (
-      <div className="app-layout">
-        <div className="container">
+      <div className="min-h-screen bg-background p-4 md:p-6">
+        <div className="max-w-6xl mx-auto">
           <GameDetails
             game={selectedGame}
             onClose={handleCloseGameDetails}
@@ -186,14 +225,14 @@ const GamingApp: React.FC = () => {
 
   // Otherwise show the main page
   return (
-    <div className="app-layout">
-      <div className="container">
+    <div className="min-h-screen bg-background p-4 md:p-6">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
         <Header />
         
         {/* Search Section */}
-        <div className="search-section">
-          <div className={`search-container ${(isSearchFocused && (searchTerm || popularGames.length > 0)) ? 'search-active' : ''}`}>
+        <div className="relative mb-8">
+          <div className="relative">
             <SearchBar
               value={searchTerm}
               onChange={handleSearchChange}
@@ -207,95 +246,93 @@ const GamingApp: React.FC = () => {
 
           {/* Search Results */}
           {isSearchFocused && searchTerm && searchResults.length > 0 && (
-            <div className="search-results">
-              <ul className="search-results-list">
+            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg max-h-80 overflow-y-auto z-50">
+              <div className="p-2">
                 {searchResults.map((game) => (
-                  <li key={game.id} className="search-result-item">
-                    <button
-                      className="search-result-button"
-                      onClick={() => handleGameDetails(game)}
-                      type="button"
-                      aria-label={`View details for ${game.title}`}
-                    >
-                      <div className="search-result-image">
-                        <ImageWithFallback
-                          src={game.image}
-                          alt={game.title}
-                          className="search-result-img"
-                          size={48}
-                        />
-                      </div>
-                      <div className="search-result-info">
-                        <span className="search-result-title">{game.title}</span>
-                        <span className="search-result-genre">{game.genre}</span>
-                      </div>
-                    </button>
-                  </li>
+                  <button
+                    key={game.id}
+                    className="w-full flex items-center gap-3 p-3 hover:bg-muted rounded-md transition-colors text-left"
+                    onClick={() => handleGameDetails(game)}
+                    type="button"
+                    aria-label={`View details for ${game.title}`}
+                  >
+                    <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
+                      <ImageWithFallback
+                        src={game.image}
+                        alt={game.title}
+                        className="w-full h-full object-cover"
+                        size={48}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1 flex-1 min-w-0">
+                      <span className="text-sm font-medium text-foreground truncate">{game.title}</span>
+                      <span className="text-xs text-muted-foreground truncate">{game.genre}</span>
+                    </div>
+                  </button>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
 
           {/* Popular Games */}
           {isSearchFocused && !searchTerm && popularGames.length > 0 && (
-            <div className="search-results">
-              <ul className="search-results-list">
+            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg max-h-80 overflow-y-auto z-50">
+              <div className="p-2">
                 {popularGames.map((game) => (
-                  <li key={game.id} className="search-result-item">
-                    <button
-                      className="search-result-button"
-                      onClick={() => handleGameDetails(game)}
-                      type="button"
-                      aria-label={`View details for ${game.title}`}
-                    >
-                      <div className="search-result-image">
-                        <ImageWithFallback
-                          src={game.image}
-                          alt={game.title}
-                          className="search-result-img"
-                          size={48}
-                        />
-                      </div>
-                      <div className="search-result-info">
-                        <span className="search-result-title">{game.title}</span>
-                        <span className="search-result-genre">{game.genre}</span>
-                      </div>
-                    </button>
-                  </li>
+                  <button
+                    key={game.id}
+                    className="w-full flex items-center gap-3 p-3 hover:bg-muted rounded-md transition-colors text-left"
+                    onClick={() => handleGameDetails(game)}
+                    type="button"
+                    aria-label={`View details for ${game.title}`}
+                  >
+                    <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
+                      <ImageWithFallback
+                        src={game.image}
+                        alt={game.title}
+                        className="w-full h-full object-cover"
+                        size={48}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1 flex-1 min-w-0">
+                      <span className="text-sm font-medium text-foreground truncate">{game.title}</span>
+                      <span className="text-xs text-muted-foreground truncate">{game.genre}</span>
+                    </div>
+                  </button>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
 
           {/* Loading States */}
           {isSearchFocused && searchTerm && isLoading && (
-            <div className="search-no-results">
-              <p>Searching games...</p>
+            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg p-4 text-center z-50">
+              <p className="text-muted-foreground">Searching games...</p>
             </div>
           )}
 
           {isSearchFocused && !searchTerm && popularGames.length === 0 && isLoading && (
-            <div className="search-no-results">
-              <p>Loading popular games...</p>
+            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg p-4 text-center z-50">
+              <p className="text-muted-foreground">Loading popular games...</p>
             </div>
           )}
 
           {/* No Results */}
           {isSearchFocused && searchTerm && searchResults.length === 0 && !isLoading && (
-            <div className="search-no-results">
-              <p>No games found for &quot;{searchTerm}&quot;</p>
+            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg p-4 text-center z-50">
+              <p className="text-muted-foreground">No games found for &quot;{searchTerm}&quot;</p>
             </div>
           )}
 
           {isSearchFocused && !searchTerm && popularGames.length === 0 && error && (
-            <div className="search-no-results">
-              <p>Failed to load popular games</p>
+            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg p-4 text-center z-50">
+              <p className="text-destructive">Failed to load popular games</p>
             </div>
           )}
 
           {isSearchFocused && searchTerm && error && (
-            <div className="search-no-results">
-              <p>Search failed. Please try again.</p>
+            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg p-4 text-center z-50">
+              <p className="text-destructive">Search failed. Please try again.</p>
             </div>
           )}
         </div>
@@ -307,6 +344,9 @@ const GamingApp: React.FC = () => {
             onDeleteGame={handleDeleteGame}
             onGameClick={handleSavedGameClick}
             title="Saved Games"
+            showFilters={true}
+            currentFilter={savedGamesFilter}
+            onFilterChange={handleFilterChange}
           />
         </GamesErrorBoundary>
       </div>
