@@ -1,4 +1,5 @@
 import './globals.css'
+import '../styles/logo.css'
 import { ReactNode } from 'react';
 
 export const metadata = {
@@ -17,7 +18,7 @@ export default function RootLayout({ children }: RootLayoutProps): React.JSX.Ele
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
       </head>
-      <body className="bg-white text-black">
+      <body className="pink-gradient-bg text-black">
         {children}
       </body>
     </html>

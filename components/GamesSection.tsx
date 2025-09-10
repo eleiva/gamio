@@ -18,7 +18,7 @@ const GamesSection: React.FC<GamesSectionProps> = ({
   return (
     <section className={cn("w-full", className)}>
       {/* Section Title */}
-      <h2 className="text-3xl font-bold text-foreground mb-8">
+      <h2 className="text-3xl font-bold violet-title mb-8">
         {title}
       </h2>
       

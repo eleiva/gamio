@@ -23,20 +23,18 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
   return (
     <div className={cn("flex gap-2 mb-6", className)}>
       {filters.map((filter) => (
-        <Button
+        <button
           key={filter.key}
-          variant={currentFilter === filter.key ? "default" : "outline"}
-          size="sm"
           onClick={() => onFilterChange(filter.key)}
           className={cn(
-            "transition-all duration-200",
+            "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
             currentFilter === filter.key 
-              ? "bg-primary text-primary-foreground shadow-md" 
-              : "text-primary hover:bg-primary/10 hover:text-primary"
+              ? "violet-button-active shadow-md" 
+              : "violet-button-inactive"
           )}
         >
           {filter.label}
-        </Button>
+        </button>
       ))}
     </div>
   );

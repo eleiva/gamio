@@ -204,7 +204,15 @@ const GamingApp: React.FC = () => {
   // If a game is selected, show the game details page
   if (selectedGame) {
     return (
-      <div className="min-h-screen bg-background p-4 md:p-6">
+      <div className="min-h-screen p-4 md:p-6 relative">
+        {/* Sparkle elements */}
+        <div className="sparkle" style={{ top: '20%', left: '10%' }}></div>
+        <div className="sparkle" style={{ top: '30%', left: '85%' }}></div>
+        <div className="sparkle" style={{ top: '60%', left: '15%' }}></div>
+        <div className="sparkle" style={{ top: '70%', left: '80%' }}></div>
+        <div className="sparkle" style={{ top: '40%', left: '5%' }}></div>
+        <div className="sparkle" style={{ top: '50%', left: '90%' }}></div>
+        
         <div className="max-w-6xl mx-auto">
           <GameDetails
             game={selectedGame}
@@ -225,7 +233,15 @@ const GamingApp: React.FC = () => {
 
   // Otherwise show the main page
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6">
+    <div className="min-h-screen p-4 md:p-6 relative">
+      {/* Sparkle elements */}
+      <div className="sparkle" style={{ top: '20%', left: '10%' }}></div>
+      <div className="sparkle" style={{ top: '30%', left: '85%' }}></div>
+      <div className="sparkle" style={{ top: '60%', left: '15%' }}></div>
+      <div className="sparkle" style={{ top: '70%', left: '80%' }}></div>
+      <div className="sparkle" style={{ top: '40%', left: '5%' }}></div>
+      <div className="sparkle" style={{ top: '50%', left: '90%' }}></div>
+      
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <Header />
