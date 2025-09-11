@@ -115,18 +115,18 @@
   background: white;
   border: 2px solid #C698B8;
   border-radius: 25px;
+
   padding: 12px 40px;
   font-size: 16px;
   color: #666;
   width: 100%;
-  max-width: 90vw;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .custom-search-bar:focus {
   outline: none;
-  border-color: #FF00AE;
-  box-shadow: 0 0 0 3px rgba(255, 0, 174, 0.1);
+  border: 1px solid #FF00AE;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
 
 .custom-search-bar::placeholder {
@@ -135,6 +135,12 @@
 
 .custom-search-icon {
   color: #C698B8;
+}
+
+/* Search results dropdown styling */
+.search-results-dropdown {
+  border: 1px solid #FF00AE;
+  border-top: none;
 }
 
 /* Violet color palette */

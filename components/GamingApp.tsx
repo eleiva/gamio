@@ -262,17 +262,17 @@ const GamingApp: React.FC = () => {
 
           {/* Search Results */}
           {isSearchFocused && searchTerm && searchResults.length > 0 && (
-            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg max-h-80 overflow-y-auto z-50">
-              <div className="p-2">
-                {searchResults.map((game) => (
+            <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg z-50">
+              <div className="p-1 md:p-2">
+                {searchResults.slice(0, 5).map((game) => (
                   <button
                     key={game.id}
-                    className="w-full flex items-center gap-3 p-3 hover:bg-muted rounded-md transition-colors text-left"
+                    className="w-full flex items-center gap-2 md:gap-3 p-2 md:p-3 hover:bg-muted rounded-md transition-colors text-left"
                     onClick={() => handleGameDetails(game)}
                     type="button"
                     aria-label={`View details for ${game.title}`}
                   >
-                    <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
+                    <div className="w-8 h-8 md:w-12 md:h-12 rounded-md overflow-hidden flex-shrink-0">
                       <ImageWithFallback
                         src={game.image}
                         alt={game.title}
@@ -280,8 +280,8 @@ const GamingApp: React.FC = () => {
                         size={48}
                       />
                     </div>
-                    <div className="flex flex-col gap-1 flex-1 min-w-0">
-                      <span className="text-sm font-medium text-foreground truncate">{game.title}</span>
+                    <div className="flex flex-col gap-0.5 md:gap-1 flex-1 min-w-0">
+                      <span className="text-xs md:text-sm font-medium text-foreground truncate">{game.title}</span>
                       <span className="text-xs text-muted-foreground truncate">{game.genre}</span>
                     </div>
                   </button>
@@ -292,17 +292,17 @@ const GamingApp: React.FC = () => {
 
           {/* Popular Games */}
           {isSearchFocused && !searchTerm && popularGames.length > 0 && (
-            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg max-h-80 overflow-y-auto z-50">
-              <div className="p-2">
-                {popularGames.map((game) => (
+            <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg z-50">
+              <div className="p-1 md:p-2">
+                {popularGames.slice(0, 5).map((game) => (
                   <button
                     key={game.id}
-                    className="w-full flex items-center gap-3 p-3 hover:bg-muted rounded-md transition-colors text-left"
+                    className="w-full flex items-center gap-2 md:gap-3 p-2 md:p-3 hover:bg-muted rounded-md transition-colors text-left"
                     onClick={() => handleGameDetails(game)}
                     type="button"
                     aria-label={`View details for ${game.title}`}
                   >
-                    <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
+                    <div className="w-8 h-8 md:w-12 md:h-12 rounded-md overflow-hidden flex-shrink-0">
                       <ImageWithFallback
                         src={game.image}
                         alt={game.title}
@@ -310,8 +310,8 @@ const GamingApp: React.FC = () => {
                         size={48}
                       />
                     </div>
-                    <div className="flex flex-col gap-1 flex-1 min-w-0">
-                      <span className="text-sm font-medium text-foreground truncate">{game.title}</span>
+                    <div className="flex flex-col gap-0.5 md:gap-1 flex-1 min-w-0">
+                      <span className="text-xs md:text-sm font-medium text-foreground truncate">{game.title}</span>
                       <span className="text-xs text-muted-foreground truncate">{game.genre}</span>
                     </div>
                   </button>
@@ -322,32 +322,32 @@ const GamingApp: React.FC = () => {
 
           {/* Loading States */}
           {isSearchFocused && searchTerm && isLoading && (
-            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg p-4 text-center z-50">
+            <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg p-4 text-center z-50">
               <p className="text-muted-foreground">Searching games...</p>
             </div>
           )}
 
           {isSearchFocused && !searchTerm && popularGames.length === 0 && isLoading && (
-            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg p-4 text-center z-50">
+            <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg p-4 text-center z-50">
               <p className="text-muted-foreground">Loading popular games...</p>
             </div>
           )}
 
           {/* No Results */}
           {isSearchFocused && searchTerm && searchResults.length === 0 && !isLoading && (
-            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg p-4 text-center z-50">
+            <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg p-4 text-center z-50">
               <p className="text-muted-foreground">No games found for &quot;{searchTerm}&quot;</p>
             </div>
           )}
 
           {isSearchFocused && !searchTerm && popularGames.length === 0 && error && (
-            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg p-4 text-center z-50">
+            <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg p-4 text-center z-50">
               <p className="text-destructive">Failed to load popular games</p>
             </div>
           )}
 
           {isSearchFocused && searchTerm && error && (
-            <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-b-lg shadow-lg p-4 text-center z-50">
+            <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg p-4 text-center z-50">
               <p className="text-destructive">Search failed. Please try again.</p>
             </div>
           )}
