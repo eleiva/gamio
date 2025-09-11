@@ -3,9 +3,8 @@
 import React from 'react';
 import { Trash2 } from 'lucide-react';
 import ImageWithFallback from './ui/ImageWithFallback';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
 import { GameCardProps } from '@/types';
 
 const GameCard: React.FC<GameCardProps> = ({ game, onDelete, onClick }) => {

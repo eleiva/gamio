@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import ToastComponent, { Toast } from './toast';
+import ToastComponent, { Toast } from './Toast';
 
 interface ToastContainerProps {
   toasts: Toast[];

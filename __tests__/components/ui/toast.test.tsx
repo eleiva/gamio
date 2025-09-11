@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import ToastComponent from '@/components/ui/toast';
-import { Toast } from '@/components/ui/toast';
+import ToastComponent from '@/components/ui/Toast';
+import { Toast } from '@/components/ui/Toast';
 
 const mockToast: Toast = {
   id: 'test-toast-1',

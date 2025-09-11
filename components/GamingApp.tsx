@@ -1,34 +1,28 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './Header';
-import SearchBar from '@/components/SearchBar';
+import SearchBar from './SearchBar';
 import GamesSection from './GamesSection';
 import GamesErrorBoundary from './GamesErrorBoundary';
 import GameDetails from './GameDetails';
-import ToastContainer from './ui/toast-container';
-import ImageWithFallback from './ui/ImageWithFallback';
+import ToastContainer from './ui/ToastContainer';
 import { Game, SavedGamesFilter } from '@/types';
-import { useIGDB } from '@/hooks/useIGDB';
 import { useToast } from '@/hooks/useToast';
-import { useDebounce } from '@/hooks/useDebounce';
+import { useSearch } from '@/hooks/useSearch';
 
 
 const GamingApp: React.FC = () => {
   const [games, setGames] = useState<Game[]>([]);
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [searchResults, setSearchResults] = useState<Game[]>([]);
-  const [popularGames, setPopularGames] = useState<Game[]>([]);
-  const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [savedGamesFilter, setSavedGamesFilter] = useState<SavedGamesFilter>('lastAdded');
   
-  const { searchGames, getPopularGames, isLoading, error } = useIGDB();
   const { toasts, removeToast, showSuccess } = useToast();
   
-  // Debounce search term to avoid too many API calls
-  const debouncedSearchTerm = useDebounce(searchTerm, 500); // Increased to 500ms
-  const searchAbortController = useRef<AbortController | null>(null);
+  // Search functionality
+  const searchHook = useSearch({
+    onGameSelect: (game: Game) => setSelectedGame(game)
+  });
 
   // Load saved games from localStorage on component mount
   useEffect(() => {
@@ -44,40 +38,6 @@ const GamingApp: React.FC = () => {
     loadSavedGames();
   }, []);
 
-  // Handle debounced search
-  useEffect(() => {
-    const performSearch = async (): Promise<void> => {
-      // Cancel previous request if it exists
-      const currentController = searchAbortController.current;
-      if (currentController) {
-        currentController.abort();
-      }
-      
-      if (debouncedSearchTerm.trim().length >= 2) {
-        try {
-          const results = await searchGames(debouncedSearchTerm, 10);
-          setSearchResults(results || []);
-        } catch (err) {
-          if (err instanceof Error && err.name === 'AbortError') {
-            return;
-          }
-          setSearchResults([]);
-        }
-      } else {
-        setSearchResults([]);
-      }
-    };
-
-    performSearch();
-    
-    // Cleanup function to cancel request on unmount
-    return () => {
-      const currentController = searchAbortController.current;
-      if (currentController) {
-        currentController.abort();
-      }
-    };
-  }, [debouncedSearchTerm]);
 
   // Filter and sort saved games based on selected filter
   const getFilteredSavedGames = (): Game[] => {
@@ -135,46 +95,9 @@ const GamingApp: React.FC = () => {
     }
   };
 
-  // Handle search input change
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setSearchTerm(e.target.value);
-  };
-
-  // Handle search focus - fetch popular games
-  const handleSearchFocus = async (): Promise<void> => {
-    setIsSearchFocused(true);
-    if (popularGames.length === 0 && !isLoading) {
-      try {
-        const popular = await getPopularGames(10);
-        if (popular) {
-          setPopularGames(popular);
-        }
-      } catch (err) {
-        // Failed to fetch popular games
-      }
-    }
-  };
-
-  // Handle search blur
-  const handleSearchBlur = (): void => {
-    // Delay blur to allow clicking on search results
-    setTimeout(() => {
-      setIsSearchFocused(false);
-    }, 200);
-  };
-
-  // Handle clearing search
-  const handleClearSearch = (): void => {
-    setSearchTerm('');
-    setSearchResults([]);
-    setIsSearchFocused(false);
-  };
-
-
   // Handle game details view
   const handleGameDetails = (game: Game): void => {
     setSelectedGame(game);
-    setIsSearchFocused(false);
   };
 
   // Handle clicking on saved games
@@ -248,109 +171,21 @@ const GamingApp: React.FC = () => {
         
         {/* Search Section */}
         <div className="relative mb-8">
-          <div className="relative">
-            <SearchBar
-              value={searchTerm}
-              onChange={handleSearchChange}
-              onFocus={handleSearchFocus}
-              onBlur={handleSearchBlur}
-              onClear={handleClearSearch}
-              placeholder="Search games..."
-              showClearButton={isSearchFocused}
-            />
-          </div>
-
-          {/* Search Results */}
-          {isSearchFocused && searchTerm && searchResults.length > 0 && (
-            <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg z-50">
-              <div className="p-1 md:p-2">
-                {searchResults.slice(0, 5).map((game) => (
-                  <button
-                    key={game.id}
-                    className="w-full flex items-center gap-2 md:gap-3 p-2 md:p-3 hover:bg-muted rounded-md transition-colors text-left"
-                    onClick={() => handleGameDetails(game)}
-                    type="button"
-                    aria-label={`View details for ${game.title}`}
-                  >
-                    <div className="w-8 h-8 md:w-12 md:h-12 rounded-md overflow-hidden flex-shrink-0">
-                      <ImageWithFallback
-                        src={game.image}
-                        alt={game.title}
-                        className="w-full h-full object-cover"
-                        size={48}
-                      />
-                    </div>
-                    <div className="flex flex-col gap-0.5 md:gap-1 flex-1 min-w-0">
-                      <span className="text-xs md:text-sm font-medium text-foreground truncate">{game.title}</span>
-                      <span className="text-xs text-muted-foreground truncate">{game.genre}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Popular Games */}
-          {isSearchFocused && !searchTerm && popularGames.length > 0 && (
-            <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg z-50">
-              <div className="p-1 md:p-2">
-                {popularGames.slice(0, 5).map((game) => (
-                  <button
-                    key={game.id}
-                    className="w-full flex items-center gap-2 md:gap-3 p-2 md:p-3 hover:bg-muted rounded-md transition-colors text-left"
-                    onClick={() => handleGameDetails(game)}
-                    type="button"
-                    aria-label={`View details for ${game.title}`}
-                  >
-                    <div className="w-8 h-8 md:w-12 md:h-12 rounded-md overflow-hidden flex-shrink-0">
-                      <ImageWithFallback
-                        src={game.image}
-                        alt={game.title}
-                        className="w-full h-full object-cover"
-                        size={48}
-                      />
-                    </div>
-                    <div className="flex flex-col gap-0.5 md:gap-1 flex-1 min-w-0">
-                      <span className="text-xs md:text-sm font-medium text-foreground truncate">{game.title}</span>
-                      <span className="text-xs text-muted-foreground truncate">{game.genre}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Loading States */}
-          {isSearchFocused && searchTerm && isLoading && (
-            <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg p-4 text-center z-50">
-              <p className="text-muted-foreground">Searching games...</p>
-            </div>
-          )}
-
-          {isSearchFocused && !searchTerm && popularGames.length === 0 && isLoading && (
-            <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg p-4 text-center z-50">
-              <p className="text-muted-foreground">Loading popular games...</p>
-            </div>
-          )}
-
-          {/* No Results */}
-          {isSearchFocused && searchTerm && searchResults.length === 0 && !isLoading && (
-            <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg p-4 text-center z-50">
-              <p className="text-muted-foreground">No games found for &quot;{searchTerm}&quot;</p>
-            </div>
-          )}
-
-          {isSearchFocused && !searchTerm && popularGames.length === 0 && error && (
-            <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg p-4 text-center z-50">
-              <p className="text-destructive">Failed to load popular games</p>
-            </div>
-          )}
-
-          {isSearchFocused && searchTerm && error && (
-            <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg p-4 text-center z-50">
-              <p className="text-destructive">Search failed. Please try again.</p>
-            </div>
-          )}
+          <SearchBar
+            value={searchHook.searchTerm}
+            onChange={searchHook.handleSearchChange}
+            onFocus={searchHook.handleSearchFocus}
+            onBlur={searchHook.handleSearchBlur}
+            onClear={searchHook.handleClearSearch}
+            onGameSelect={searchHook.handleGameSelect}
+            placeholder="Search games..."
+            showClearButton={searchHook.isSearchFocused}
+            searchResults={searchHook.searchResults}
+            popularGames={searchHook.popularGames}
+            isSearchFocused={searchHook.isSearchFocused}
+            isLoading={searchHook.isLoading}
+            error={searchHook.error}
+          />
         </div>
         
         {/* Games Section */}

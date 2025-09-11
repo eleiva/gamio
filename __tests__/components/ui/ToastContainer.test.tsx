@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ToastContainer from '@/components/ui/ToastContainer';
-import { Toast } from '@/components/ui/toast';
+import { Toast } from '@/components/ui/Toast';
 
 const mockToasts: Toast[] = [
   {
