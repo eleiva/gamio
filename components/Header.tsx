@@ -8,7 +8,7 @@ const Header: React.FC = () => {
         <img 
           src="/favicon.ico" 
           alt="Gamio Logo" 
-          className="w-12 h-12 md:w-16 md:h-16 logo-entrance logo-hover-scale"
+          className="w-12 h-12 md:w-16 md:h-16"
         />
         <h1 className="text-5xl md:text-6xl font-bold violet-title tracking-tight">
           Gamio
