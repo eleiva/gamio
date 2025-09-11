@@ -1,7 +1,7 @@
 import React from 'react';
 import GameCard from './GameCard';
-import FilterButtons from './ui/filter-buttons';
-import { Card, CardContent } from '@/components/ui/card';
+import FilterButtons from './ui/FilterButtons';
+import { Card, CardContent } from '@/components/ui/Card';
 import { cn } from '@/lib/utils';
 import { GamesSectionProps } from '@/types';
 
