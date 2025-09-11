@@ -62,7 +62,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
   );
 
   const renderDropdown = () => {
-    if (!isSearchFocused) return null;
+    if (!isSearchFocused) {
+      return null;
+    }
 
     // Search Results
     if (value && searchResults.length > 0) {

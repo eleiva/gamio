@@ -5,7 +5,6 @@ import { Trash2 } from 'lucide-react';
 import ImageWithFallback from './ui/ImageWithFallback';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { cn } from '@/lib/utils';
 import { GameCardProps } from '@/types';
 
 const GameCard: React.FC<GameCardProps> = ({ game, onDelete, onClick }) => {
