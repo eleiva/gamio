@@ -74,10 +74,7 @@ export const useSearch = ({ onGameSelect }: UseSearchProps) => {
 
   // Handle search blur
   const handleSearchBlur = (): void => {
-    // Delay blur to allow clicking on search results
-    setTimeout(() => {
-      setIsSearchFocused(false);
-    }, 200);
+    setIsSearchFocused(false);
   };
 
   // Handle clearing search

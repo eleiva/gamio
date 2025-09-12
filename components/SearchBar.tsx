@@ -42,7 +42,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
     <button
       key={game.id}
       className="w-full flex items-center gap-2 md:gap-3 p-2 md:p-3 hover:bg-muted rounded-md transition-colors text-left"
-      onClick={() => onGameSelect(game)}
+      onMouseDown={(e) => {
+        e.preventDefault(); // Prevent input blur
+        onGameSelect(game);
+      }}
       type="button"
       aria-label={`View details for ${game.title}`}
     >
