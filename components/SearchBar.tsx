@@ -41,18 +41,20 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const renderGameItem = (game: Game) => (
     <button
       key={game.id}
-      className="w-full flex items-center gap-2 md:gap-3 p-2 md:p-3 hover:bg-muted rounded-md transition-colors text-left"
+      className="w-full flex items-center gap-2 md:gap-3 p-2 md:p-3 hover:bg-muted rounded-md transition-colors text-left focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2"
       onMouseDown={(e) => {
         e.preventDefault(); // Prevent input blur
         onGameSelect(game);
       }}
+      onClick={() => onGameSelect(game)}
       type="button"
-      aria-label={`View details for ${game.title}`}
+      role="option"
+      aria-label={`View details for ${game.title}${game.genre ? `, ${game.genre} game` : ''}`}
     >
       <div className="w-8 h-8 md:w-12 md:h-12 rounded-md overflow-hidden flex-shrink-0">
         <ImageWithFallback
           src={game.image}
-          alt={game.title}
+          alt={`${game.title} game cover`}
           className="w-full h-full object-cover"
           size={48}
         />
@@ -72,7 +74,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
     // Search Results
     if (value && searchResults.length > 0) {
       return (
-        <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg z-50">
+        <div 
+          className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg z-50"
+          role="listbox"
+          aria-label="Search results"
+        >
           <div className="p-1 md:p-2">
             {searchResults.slice(0, 5).map(renderGameItem)}
           </div>
@@ -83,7 +89,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
     // Popular Games
     if (!value && popularGames.length > 0) {
       return (
-        <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg z-50">
+        <div 
+          className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg z-50"
+          role="listbox"
+          aria-label="Popular games"
+        >
           <div className="p-1 md:p-2">
             {popularGames.slice(0, 5).map(renderGameItem)}
           </div>
@@ -140,7 +150,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <div className={cn("relative w-full", className)}>
       <div className="relative w-full">
-        <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 custom-search-icon" />
+        <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 custom-search-icon" aria-hidden="true" />
         <input
           type="text"
           value={value}
@@ -150,15 +160,20 @@ const SearchBar: React.FC<SearchBarProps> = ({
           placeholder={placeholder}
           className="custom-search-bar pl-16 pr-12"
           aria-label="Search games"
+          aria-expanded={isSearchFocused}
+          aria-haspopup="listbox"
+          aria-autocomplete="list"
+          role="combobox"
+          autoComplete="off"
         />
         {(value || showClearButton) && (
           <button
-            className="absolute right-3 top-1/2 h-6 w-6 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+            className="absolute right-3 top-1/2 h-6 w-6 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 rounded"
             onClick={onClear}
             type="button"
             aria-label="Clear search"
           >
-            <X className="h-4 w-4" />
+            <X className="h-4 w-4" aria-hidden="true" />
           </button>
         )}
       </div>

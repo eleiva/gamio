@@ -1,5 +1,24 @@
 /* Logo animations and effects */
 
+/* Fade in from bottom to top animation */
+.logo-animate {
+  animation: logoFadeInUp 1.2s ease-out forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* Keyframe for fade in from bottom to top */
+@keyframes logoFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Basic logo animations */
 .logo-bounce {
   animation: logoBounce 2s ease-in-out infinite;

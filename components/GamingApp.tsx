@@ -6,6 +6,7 @@ import SearchBar from './SearchBar';
 import GamesSection from './GamesSection';
 import GamesErrorBoundary from './GamesErrorBoundary';
 import ToastContainer from './ui/ToastContainer';
+import StickyFilterBar from './ui/StickyFilterBar';
 import { Game, SavedGamesFilter } from '@/types';
 import { useToast } from '@/hooks/useToast';
 import { useSearch } from '@/hooks/useSearch';
@@ -19,9 +20,11 @@ const GamingApp: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [savedGamesFilter, setSavedGamesFilter] = useState<SavedGamesFilter>('lastAdded');
   const [isLoadingSavedGames, setIsLoadingSavedGames] = useState<boolean>(true);
+  const [showStickyFilter, setShowStickyFilter] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
   
   const { toasts, removeToast, showSuccess, showError } = useToast();
-  
+
   // Search functionality
   const searchHook = useSearch({
     onGameSelect: (game: Game) => setSelectedGame(game)
@@ -35,11 +38,72 @@ const GamingApp: React.FC = () => {
         const gamesData: Record<string, Game> = JSON.parse(collectedGames);
         const savedGames = Object.values(gamesData);
         setGames(savedGames);
+      } else {
+        // Add some test games for development
+        if (process.env.NODE_ENV === 'development') {
+          const testGames: Record<string, Game> = {
+            '1': {
+              id: 1,
+              title: 'Test Game 1',
+              image: '/favicon.ico',
+              genre: 'Action',
+              releaseDate: '2024-01-01',
+              addedAt: new Date()
+            },
+            '2': {
+              id: 2,
+              title: 'Test Game 2',
+              image: '/favicon.ico',
+              genre: 'RPG',
+              releaseDate: '2024-02-01',
+              addedAt: new Date()
+            },
+            '3': {
+              id: 3,
+              title: 'Test Game 3',
+              image: '/favicon.ico',
+              genre: 'Strategy',
+              releaseDate: '2024-03-01',
+              addedAt: new Date()
+            },
+            '4': {
+              id: 4,
+              title: 'Test Game 4',
+              image: '/favicon.ico',
+              genre: 'Adventure',
+              releaseDate: '2024-04-01',
+              addedAt: new Date()
+            },
+            '5': {
+              id: 5,
+              title: 'Test Game 5',
+              image: '/favicon.ico',
+              genre: 'Sports',
+              releaseDate: '2024-05-01',
+              addedAt: new Date()
+            }
+          };
+          localStorage.setItem('collectedGames', JSON.stringify(testGames));
+          setGames(Object.values(testGames));
+        }
       }
       setIsLoadingSavedGames(false);
     };
 
     loadSavedGames();
+  }, []);
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      const isMobileDevice = window.innerWidth < 768; // md breakpoint
+      setIsMobile(isMobileDevice);
+      console.log('Mobile detection:', { width: window.innerWidth, isMobile: isMobileDevice });
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
 
@@ -164,7 +228,7 @@ const GamingApp: React.FC = () => {
 
   // Otherwise show the main page
   return (
-    <div className="min-h-screen p-4 md:p-6 relative">
+    <div className={`min-h-screen p-4 md:p-6 relative ${showStickyFilter ? "pt-20 md:pt-4" : ""}`}>
       {/* Sparkle elements */}
       <div className="sparkle" style={{ top: '20%', left: '10%' }}></div>
       <div className="sparkle" style={{ top: '30%', left: '85%' }}></div>
@@ -173,12 +237,27 @@ const GamingApp: React.FC = () => {
       <div className="sparkle" style={{ top: '40%', left: '5%' }}></div>
       <div className="sparkle" style={{ top: '50%', left: '90%' }}></div>
       
-      <div className="max-w-6xl mx-auto">
+      {/* Sticky Filter Bar - Mobile Only */}
+      {showStickyFilter && isMobile && (
+        <StickyFilterBar
+          currentFilter={savedGamesFilter}
+          onFilterChange={handleFilterChange}
+        />
+      )}
+      
+      {/* Debug info */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="fixed bottom-4 right-4 bg-black text-white p-2 text-xs rounded">
+          Mobile: {isMobile ? 'Yes' : 'No'} | Sticky: {showStickyFilter ? 'Yes' : 'No'} | Games: {games.length}
+        </div>
+      )}
+      
+      <main className="max-w-6xl mx-auto" role="main">
         {/* Header */}
         <Header />
         
         {/* Search Section */}
-        <div className="relative mb-8">
+        <section className="relative mb-8" aria-label="Game search">
           <SearchBar
             value={searchHook.searchTerm}
             onChange={searchHook.handleSearchChange}
@@ -194,22 +273,25 @@ const GamingApp: React.FC = () => {
             isLoading={searchHook.isLoading}
             error={searchHook.error}
           />
-        </div>
+        </section>
         
         {/* Games Section */}
-        <GamesErrorBoundary onRetry={() => window.location.reload()}>
-          <GamesSection
-            games={savedGames}
-            onDeleteGame={handleDeleteGame}
-            onGameClick={handleSavedGameClick}
-            title="Saved Games"
-            showFilters={true}
-            currentFilter={savedGamesFilter}
-            onFilterChange={handleFilterChange}
-            isLoading={isLoadingSavedGames}
-          />
-        </GamesErrorBoundary>
-      </div>
+        <section aria-label="Saved games collection">
+          <GamesErrorBoundary onRetry={() => window.location.reload()}>
+            <GamesSection
+              games={savedGames}
+              onDeleteGame={handleDeleteGame}
+              onGameClick={handleSavedGameClick}
+              title="Saved Games"
+              showFilters={true}
+              currentFilter={savedGamesFilter}
+              onFilterChange={handleFilterChange}
+              isLoading={isLoadingSavedGames}
+              onStickyFilterChange={isMobile ? setShowStickyFilter : undefined}
+            />
+          </GamesErrorBoundary>
+        </section>
+      </main>
       <ToastContainer toasts={toasts} onRemoveToast={removeToast} />
     </div>
   );

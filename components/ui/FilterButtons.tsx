@@ -20,7 +20,7 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
   ];
 
   return (
-    <div className={cn("flex gap-2 mb-6", className)}>
+    <div className={cn("flex gap-2 mb-6 justify-center md:justify-start", className)}>
       {filters.map((filter) => (
         <button
           key={filter.key}
