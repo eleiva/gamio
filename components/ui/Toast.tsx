@@ -49,16 +49,28 @@ const ToastComponent: React.FC<ToastProps> = ({ toast, onRemove }) => {
       case 'success':
         return <CheckCircle className="h-5 w-5 text-green-600" />;
       case 'error':
-        return <XCircle className="h-5 w-5 text-destructive" />;
+        return <XCircle className="h-5 w-5 text-red-500" />;
       default:
-        return <CheckCircle className="h-5 w-5 text-primary" />;
+        return <CheckCircle className="h-5 w-5 text-violet-600" />;
+    }
+  };
+
+  const getBorderColor = () => {
+    switch (toast.type) {
+      case 'success':
+        return 'border-green-500';
+      case 'error':
+        return 'border-red-500';
+      default:
+        return 'border-border';
     }
   };
 
   return (
     <div 
       className={cn(
-        "bg-background border border-border rounded-lg shadow-lg p-4 min-w-80 max-w-96 pointer-events-auto transform transition-all duration-300",
+        "bg-background border rounded-lg shadow-lg p-4 min-w-80 max-w-96 pointer-events-auto transform transition-all duration-300",
+        getBorderColor(),
         isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0",
         isLeaving && "translate-y-[-100px] opacity-0"
       )}

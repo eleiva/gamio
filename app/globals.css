@@ -174,3 +174,12 @@
 .no-image-text {
   @apply text-xs font-medium mt-1 text-center;
 }
+
+/* Hide scrollbars for carousel components */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
