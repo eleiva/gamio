@@ -17,7 +17,7 @@ const GamingApp: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [savedGamesFilter, setSavedGamesFilter] = useState<SavedGamesFilter>('lastAdded');
   
-  const { toasts, removeToast, showSuccess } = useToast();
+  const { toasts, removeToast, showSuccess, showError } = useToast();
   
   // Search functionality
   const searchHook = useSearch({
@@ -144,7 +144,7 @@ const GamingApp: React.FC = () => {
               if (isCollected) {
                 showSuccess('Game collected', `${game.title} has been added to your collection`);
               } else {
-                showSuccess('Game removed', `${game.title} has been removed from your collection`);
+                showError('Game removed', `${game.title} has been removed from your collection`);
               }
             }}
           />

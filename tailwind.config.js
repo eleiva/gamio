@@ -49,13 +49,22 @@ module.exports = {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
   			},
-  			chart: {
-  				'1': 'hsl(var(--chart-1))',
-  				'2': 'hsl(var(--chart-2))',
-  				'3': 'hsl(var(--chart-3))',
-  				'4': 'hsl(var(--chart-4))',
-  				'5': 'hsl(var(--chart-5))'
-  			}
+			chart: {
+				'1': 'hsl(var(--chart-1))',
+				'2': 'hsl(var(--chart-2))',
+				'3': 'hsl(var(--chart-3))',
+				'4': 'hsl(var(--chart-4))',
+				'5': 'hsl(var(--chart-5))'
+			},
+			violet: {
+				50: '#E2DCE7',
+				100: '#E7C0DB',
+				200: '#E2DCE7',
+				600: '#6727A6',
+				700: '#5A1F8F',
+				800: '#4A148C',
+				900: '#3C1661'
+			}
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

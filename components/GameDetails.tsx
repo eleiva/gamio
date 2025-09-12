@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Star, Calendar, Tag, Heart } from 'lucide-react';
+import { ArrowLeft, Star, Calendar, Tag } from 'lucide-react';
 import ImageWithFallback from './ui/ImageWithFallback';
 import { Button } from '@/components/ui/Button';
+import CollectButton from './ui/CollectButton';
+import Chip from './ui/Chip';
+import MediaCarousel from './ui/MediaCarousel';
+import SimilarGames from './ui/SimilarGames';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Separator } from '@/components/ui/Separator';
@@ -16,6 +20,48 @@ interface GameDetailsProps {
 
 const GameDetails: React.FC<GameDetailsProps> = ({ game, onClose, onGameCollected }) => {
   const [isCollected, setIsCollected] = useState<boolean>(false);
+
+  // Sample media images for demonstration
+  const mediaImages = [
+    'https://placehold.co/128x128/4f46e5/ffffff?text=Image+1',
+    'https://placehold.co/128x128/059669/ffffff?text=Image+2',
+    'https://placehold.co/128x128/dc2626/ffffff?text=Image+3',
+    'https://placehold.co/128x128/7c3aed/ffffff?text=Image+4',
+  ];
+
+  // Sample similar games for demonstration
+  const similarGames: Game[] = [
+    {
+      id: 1,
+      title: 'Grand Theft Auto III',
+      image: 'https://placehold.co/96x128/6b7280/ffffff?text=GTA+III',
+      description: 'The game that revolutionized open-world gaming',
+      genre: 'Action-Adventure',
+      platform: 'PlayStation 2, PC',
+      releaseDate: '2001-10-22',
+      rating: 9.5
+    },
+    {
+      id: 2,
+      title: 'Grand Theft Auto San Andreas',
+      image: 'https://placehold.co/96x128/6b7280/ffffff?text=GTA+SA',
+      description: 'Explore the state of San Andreas',
+      genre: 'Action-Adventure',
+      platform: 'PlayStation 2, PC',
+      releaseDate: '2004-10-26',
+      rating: 9.7
+    },
+    {
+      id: 3,
+      title: 'Grand Theft Auto IV',
+      image: 'https://placehold.co/96x128/6b7280/ffffff?text=GTA+IV',
+      description: 'Welcome to Liberty City',
+      genre: 'Action-Adventure',
+      platform: 'PlayStation 3, Xbox 360, PC',
+      releaseDate: '2008-04-29',
+      rating: 9.3
+    }
+  ];
 
   // Check if game is already collected on component mount
   useEffect(() => {
@@ -66,9 +112,9 @@ const GameDetails: React.FC<GameDetailsProps> = ({ game, onClose, onGameCollecte
           onClick={onClose}
           type="button"
           aria-label="Go back"
-          className="flex items-center gap-2"
+          className="flex items-center gap-3 text-lg"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-6 w-6" />
           <span>Back</span>
         </Button>
       </div>
@@ -91,40 +137,37 @@ const GameDetails: React.FC<GameDetailsProps> = ({ game, onClose, onGameCollecte
               <p className="text-lg text-muted-foreground">{game.platform}</p>
             </div>
             
-            <Button 
-              variant={isCollected ? "destructive" : "default"}
-              size="lg"
+            <CollectButton 
+              isCollected={isCollected}
               onClick={handleCollectGame}
-              type="button"
-              className="flex items-center gap-2"
-            >
-              <Heart className={cn("h-4 w-4", isCollected && "fill-current")} />
-              {isCollected ? 'Collected' : 'Collect game'}
-            </Button>
+            />
             
             {/* Game Stats */}
-            <div className="space-y-2">
+            <div className="flex flex-wrap gap-3">
               {game.rating && (
-                <div className="flex items-center gap-2 text-sm">
-                  <Star className="h-4 w-4 text-muted-foreground" />
-                  <span>Rating: {game.rating}</span>
-                </div>
+                <Chip
+                  icon={<Star className="h-4 w-4" />}
+                  label="Rating"
+                  value={game.rating.toString()}
+                />
               )}
               {game.releaseDate && (
-                <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <span>Release: {new Date(game.releaseDate).toLocaleDateString('en-US', { 
+                <Chip
+                  icon={<Calendar className="h-4 w-4" />}
+                  label="Release"
+                  value={new Date(game.releaseDate).toLocaleDateString('en-US', { 
                     month: 'numeric', 
                     day: 'numeric', 
                     year: 'numeric' 
-                  })}</span>
-                </div>
+                  })}
+                />
               )}
               {game.genre && (
-                <div className="flex items-center gap-2 text-sm">
-                  <Tag className="h-4 w-4 text-muted-foreground" />
-                  <span>Genre: {game.genre}</span>
-                </div>
+                <Chip
+                  icon={<Tag className="h-4 w-4" />}
+                  label="Genre"
+                  value={game.genre}
+                />
               )}
             </div>
           </div>
@@ -134,29 +177,30 @@ const GameDetails: React.FC<GameDetailsProps> = ({ game, onClose, onGameCollecte
 
         {/* Summary */}
         {game.description && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Summary</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-foreground leading-relaxed">{game.description}</p>
-            </CardContent>
-          </Card>
+          <div className="space-y-3">
+            <h2 className="text-xl font-bold text-foreground">Summary</h2>
+            <p className="text-foreground leading-relaxed">{game.description}</p>
+          </div>
         )}
 
         {/* Platforms */}
         {game.platform && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Platforms</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary">{game.platform}</Badge>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="space-y-3">
+            <h2 className="text-xl font-bold text-foreground">Platforms</h2>
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="secondary">{game.platform}</Badge>
+            </div>
+          </div>
         )}
+
+        {/* Media */}
+        <div className="space-y-3">
+          <h2 className="text-xl font-bold text-foreground">Media</h2>
+          <MediaCarousel images={mediaImages} />
+        </div>
+
+        {/* Similar Games */}
+        <SimilarGames games={similarGames} />
       </div>
     </div>
   );
