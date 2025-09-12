@@ -67,6 +67,11 @@ describe('useSearch', () => {
 
     expect(result.current.isSearchFocused).toBe(true);
     expect(mockGetPopularGames).toHaveBeenCalledWith(10);
+    
+    // Wait for state updates to complete
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 0));
+    });
   });
 
   it('should handle search blur', () => {
@@ -82,8 +87,8 @@ describe('useSearch', () => {
       result.current.handleSearchBlur();
     });
 
-    // Should still be true due to setTimeout
-    expect(result.current.isSearchFocused).toBe(true);
+    // Should be false after blur
+    expect(result.current.isSearchFocused).toBe(false);
   });
 
   it('should handle clear search', () => {
