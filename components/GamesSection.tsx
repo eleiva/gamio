@@ -4,6 +4,7 @@ import FilterButtons from './ui/FilterButtons';
 import { Card, CardContent } from '@/components/ui/Card';
 import { cn } from '@/lib/utils';
 import { GamesSectionProps } from '@/types';
+import { Loader2 } from 'lucide-react';
 
 const GamesSection: React.FC<GamesSectionProps> = ({ 
   games, 
@@ -13,7 +14,8 @@ const GamesSection: React.FC<GamesSectionProps> = ({
   className,
   showFilters = false,
   currentFilter,
-  onFilterChange
+  onFilterChange,
+  isLoading = false
 }) => {
   return (
     <section className={cn("w-full", className)}>
@@ -30,8 +32,18 @@ const GamesSection: React.FC<GamesSectionProps> = ({
         />
       )}
       
-      {/* Games Grid or Empty State */}
-      {games.length > 0 ? (
+      {/* Games Grid, Loading State, or Empty State */}
+      {isLoading ? (
+        <Card className="flex justify-center items-center min-h-[300px] p-8">
+          <CardContent className="text-center max-w-md">
+            <Loader2 className="h-8 w-8 animate-spin text-violet-600 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-foreground mb-2">Loading saved games...</h3>
+            <p className="text-muted-foreground leading-relaxed">
+              Please wait while we load your collection
+            </p>
+          </CardContent>
+        </Card>
+      ) : games.length > 0 ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
           {games.map((game) => (
             <GameCard

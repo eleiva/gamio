@@ -183,3 +183,55 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;  /* Safari and Chrome */
 }
+
+/* Typography System - Based on Design Guide */
+
+/* Gradient text for H1 headings */
+.text-gradient-h1 {
+  background: linear-gradient(180deg, #6727A6 0%, #3C1661 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Typography utility classes */
+.typography-h1 {
+  @apply font-inter text-h1-mobile md:text-h1-desktop text-gradient-h1;
+}
+
+.typography-h2 {
+  @apply font-inter text-h2-mobile md:text-h2-desktop text-typography-black;
+}
+
+.typography-h3 {
+  @apply font-inter text-h3-mobile md:text-h3-desktop text-typography-muted-purple;
+}
+
+.typography-h4 {
+  @apply font-inter text-h4-mobile md:text-h4-desktop text-typography-dark-grey;
+}
+
+.typography-h5 {
+  @apply font-inter text-h5-desktop text-typography-dark-grey;
+}
+
+/* Responsive typography classes for direct use */
+.text-h1-responsive {
+  @apply font-inter text-h1-mobile md:text-h1-desktop font-semibold text-gradient-h1;
+}
+
+.text-h2-responsive {
+  @apply font-inter text-h2-mobile md:text-h2-desktop font-semibold text-black;
+}
+
+.text-h3-responsive {
+  @apply font-inter text-h3-mobile md:text-h3-desktop font-medium text-typography-muted-purple;
+}
+
+.text-h4-responsive {
+  @apply font-inter text-h4-mobile md:text-h4-desktop font-medium text-typography-dark-grey;
+}
+
+.text-h5-responsive {
+  @apply font-inter text-h5-desktop font-medium text-typography-dark-grey;
+}

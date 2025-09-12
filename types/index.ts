@@ -29,6 +29,7 @@ export interface GamesSectionProps {
   showFilters?: boolean;
   currentFilter?: SavedGamesFilter;
   onFilterChange?: (filter: SavedGamesFilter) => void;
+  isLoading?: boolean;
 }
 
 export interface SearchBarProps {

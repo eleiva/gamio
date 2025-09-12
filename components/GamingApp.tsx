@@ -16,6 +16,7 @@ const GamingApp: React.FC = () => {
   const [games, setGames] = useState<Game[]>([]);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [savedGamesFilter, setSavedGamesFilter] = useState<SavedGamesFilter>('lastAdded');
+  const [isLoadingSavedGames, setIsLoadingSavedGames] = useState<boolean>(true);
   
   const { toasts, removeToast, showSuccess, showError } = useToast();
   
@@ -33,6 +34,7 @@ const GamingApp: React.FC = () => {
         const savedGames = Object.values(gamesData);
         setGames(savedGames);
       }
+      setIsLoadingSavedGames(false);
     };
 
     loadSavedGames();
@@ -198,6 +200,7 @@ const GamingApp: React.FC = () => {
             showFilters={true}
             currentFilter={savedGamesFilter}
             onFilterChange={handleFilterChange}
+            isLoading={isLoadingSavedGames}
           />
         </GamesErrorBoundary>
       </div>

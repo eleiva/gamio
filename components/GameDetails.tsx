@@ -20,6 +20,7 @@ interface GameDetailsProps {
 
 const GameDetails: React.FC<GameDetailsProps> = ({ game, onClose, onGameCollected }) => {
   const [isCollected, setIsCollected] = useState<boolean>(false);
+  const [isDataReady, setIsDataReady] = useState<boolean>(false);
 
   // Sample media images for demonstration
   const mediaImages = [
@@ -70,6 +71,7 @@ const GameDetails: React.FC<GameDetailsProps> = ({ game, onClose, onGameCollecte
       const parsed = JSON.parse(collectedGames);
       setIsCollected(parsed.hasOwnProperty(game.id.toString()));
     }
+    setIsDataReady(true);
   }, [game.id]);
 
   // Handle collect/uncollect game
@@ -137,10 +139,12 @@ const GameDetails: React.FC<GameDetailsProps> = ({ game, onClose, onGameCollecte
               <p className="text-lg text-muted-foreground">{game.platform}</p>
             </div>
             
-            <CollectButton 
-              isCollected={isCollected}
-              onClick={handleCollectGame}
-            />
+            {isDataReady && (
+              <CollectButton 
+                isCollected={isCollected}
+                onClick={handleCollectGame}
+              />
+            )}
             
             {/* Game Stats */}
             <div className="flex flex-wrap gap-3">
