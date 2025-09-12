@@ -2,7 +2,7 @@ import React from 'react';
 
 const Header: React.FC = () => {
   return (
-    <header className="mb-12">
+    <header className="mb-6">
       {/* Brand Name with Logo */}
       <div className="flex items-center gap-4">
         <img 

@@ -74,7 +74,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       return (
         <div className="absolute top-full left-0 right-0 bg-background search-results-dropdown rounded-b-lg shadow-lg z-50">
           <div className="p-1 md:p-2">
-            {searchResults.slice(0, 10).map(renderGameItem)}
+            {searchResults.slice(0, 5).map(renderGameItem)}
           </div>
         </div>
       );

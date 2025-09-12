@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Header from './Header';
 import SearchBar from './SearchBar';
 import GamesSection from './GamesSection';
 import GamesErrorBoundary from './GamesErrorBoundary';
-import GameDetails from './GameDetails';
 import ToastContainer from './ui/ToastContainer';
 import { Game, SavedGamesFilter } from '@/types';
 import { useToast } from '@/hooks/useToast';
 import { useSearch } from '@/hooks/useSearch';
+
+// Dynamic import for GameDetails to enable code splitting
+const GameDetails = React.lazy(() => import('./GameDetails'));
 
 
 const GamingApp: React.FC = () => {
@@ -139,17 +141,21 @@ const GamingApp: React.FC = () => {
         <div className="sparkle" style={{ top: '50%', left: '90%' }}></div>
         
         <div className="max-w-6xl mx-auto">
-          <GameDetails
-            game={selectedGame}
-            onClose={handleCloseGameDetails}
-            onGameCollected={(game, isCollected) => {
-              if (isCollected) {
-                showSuccess('Game collected', `${game.title} has been added to your collection`);
-              } else {
-                showError('Game removed', `${game.title} has been removed from your collection`);
-              }
-            }}
-          />
+          <Suspense fallback={<div className="flex justify-center items-center h-64">Loading...</div>}>
+            <GameDetails
+              game={selectedGame}
+              onClose={handleCloseGameDetails}
+              onGameCollected={(game, isCollected) => {
+                if (isCollected) {
+                  showSuccess('Game collected', `${game.title} has been added to your collection`);
+                  // Clear search input when a game is collected
+                  searchHook.handleClearSearch();
+                } else {
+                  showError('Game removed', `${game.title} has been removed from your collection`);
+                }
+              }}
+            />
+          </Suspense>
         </div>
         <ToastContainer toasts={toasts} onRemoveToast={removeToast} />
       </div>
