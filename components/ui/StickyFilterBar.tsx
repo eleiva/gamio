@@ -21,22 +21,23 @@ const StickyFilterBar: React.FC<StickyFilterBarProps> = ({
 
   return (
     <div className={cn(
-      "fixed top-0 left-0 right-0 z-50 py-4 px-4 md:hidden",
-      "bg-white/80 backdrop-blur-md border-b border-gray-200/50",
-      "transition-all duration-300 ease-in-out",
+      "fixed top-0 left-0 right-0 z-50 py-3 px-4 md:hidden",
+      "bg-white/90 backdrop-blur-md border-b border-gray-200/50 shadow-sm",
+      "transition-all duration-200 ease-out transform",
       className
     )}>
       <div className="max-w-6xl mx-auto">
-        <div className="flex gap-2 justify-center">
+        <div className="flex gap-2 justify-start">
           {filters.map((filter) => (
             <button
               key={filter.key}
               onClick={() => onFilterChange(filter.key)}
               className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+                "px-3 py-2 rounded-full text-sm font-medium transition-all duration-200",
+                "touch-manipulation", // Better touch response on mobile
                 currentFilter === filter.key 
-                  ? "violet-button-active shadow-md" 
-                  : "violet-button-inactive"
+                  ? "violet-button-active shadow-md scale-105" 
+                  : "violet-button-inactive hover:scale-102"
               )}
             >
               {filter.label}

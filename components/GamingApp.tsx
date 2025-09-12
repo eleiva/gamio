@@ -209,7 +209,7 @@ const GamingApp: React.FC = () => {
         <Header />
         
         {/* Search Section */}
-        <section className="relative mb-8" aria-label="Game search">
+        <section className="relative mb-8 md:mb-16" aria-label="Game search">
           <SearchBar
             value={searchHook.searchTerm}
             onChange={searchHook.handleSearchChange}

@@ -39,26 +39,46 @@ const GamesSection: React.FC<GamesSectionProps> = ({
       return;
     }
 
-    const handleScroll = () => {
-      if (!sectionRef.current || !filterRef.current) {
-        return;
-      }
+    let ticking = false;
 
-      const filterRect = filterRef.current.getBoundingClientRect();
-      
-      // Show sticky filter when the original filter is scrolled out of view
-      const shouldShow = filterRect.bottom < 0;
-      onStickyFilterChange(shouldShow);
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          if (!sectionRef.current || !filterRef.current) {
+            ticking = false;
+            return;
+          }
+
+          const filterRect = filterRef.current.getBoundingClientRect();
+          
+          // Add a small threshold to prevent flickering at the boundary
+          const threshold = 10;
+          
+          // Show sticky filter when the original filter is scrolled out of view
+          // Hide it when scrolling back up and the original filter is visible again
+          const shouldShow = filterRect.bottom < -threshold;
+          const shouldHide = filterRect.top > threshold && filterRect.bottom > 0;
+          
+          if (shouldShow) {
+            onStickyFilterChange(true);
+          } else if (shouldHide) {
+            onStickyFilterChange(false);
+          }
+          
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [shouldShowStickyFilter, onStickyFilterChange]);
 
   return (
     <section ref={sectionRef} className={cn("w-full", className)}>
       {/* Section Title */}
-      <h2 className="text-3xl font-bold violet-title mb-8">
+      <h2 className="text-3xl font-bold violet-title mb-8 text-left md:text-center">
         {title}
       </h2>
       

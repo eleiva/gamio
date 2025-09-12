@@ -122,6 +122,14 @@
   width: 100%;
 }
 
+@media (min-width: 768px) {
+  .custom-search-bar {
+    padding: 8px 32px;
+    font-size: 14px;
+    border-radius: 20px;
+  }
+}
+
 .custom-search-bar:focus {
   outline: none;
   border: 1px solid #FF00AE;
@@ -135,6 +143,14 @@
 
 .custom-search-icon {
   color: #C698B8;
+}
+
+@media (min-width: 768px) {
+  .custom-search-icon {
+    left: 12px;
+    height: 16px;
+    width: 16px;
+  }
 }
 
 /* Search results dropdown styling */
