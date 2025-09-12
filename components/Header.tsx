@@ -2,9 +2,9 @@ import React from 'react';
 
 const Header: React.FC = () => {
   return (
-    <header className="mb-6" role="banner">
+    <header className="mb-6 md:mb-12" role="banner">
       {/* Brand Name with Logo */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-start md:justify-center gap-4">
         <img 
           src="/favicon.ico" 
           alt="Gamio Logo" 
