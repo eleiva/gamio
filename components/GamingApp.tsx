@@ -38,54 +38,6 @@ const GamingApp: React.FC = () => {
         const gamesData: Record<string, Game> = JSON.parse(collectedGames);
         const savedGames = Object.values(gamesData);
         setGames(savedGames);
-      } else {
-        // Add some test games for development
-        if (process.env.NODE_ENV === 'development') {
-          const testGames: Record<string, Game> = {
-            '1': {
-              id: 1,
-              title: 'Test Game 1',
-              image: '/favicon.ico',
-              genre: 'Action',
-              releaseDate: '2024-01-01',
-              addedAt: new Date()
-            },
-            '2': {
-              id: 2,
-              title: 'Test Game 2',
-              image: '/favicon.ico',
-              genre: 'RPG',
-              releaseDate: '2024-02-01',
-              addedAt: new Date()
-            },
-            '3': {
-              id: 3,
-              title: 'Test Game 3',
-              image: '/favicon.ico',
-              genre: 'Strategy',
-              releaseDate: '2024-03-01',
-              addedAt: new Date()
-            },
-            '4': {
-              id: 4,
-              title: 'Test Game 4',
-              image: '/favicon.ico',
-              genre: 'Adventure',
-              releaseDate: '2024-04-01',
-              addedAt: new Date()
-            },
-            '5': {
-              id: 5,
-              title: 'Test Game 5',
-              image: '/favicon.ico',
-              genre: 'Sports',
-              releaseDate: '2024-05-01',
-              addedAt: new Date()
-            }
-          };
-          localStorage.setItem('collectedGames', JSON.stringify(testGames));
-          setGames(Object.values(testGames));
-        }
       }
       setIsLoadingSavedGames(false);
     };
