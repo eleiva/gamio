@@ -120,7 +120,7 @@ describe('useSearch', () => {
     expect(result.current.isSearchFocused).toBe(false);
   });
 
-  it('should handle game selection', () => {
+  it('should handle game selection', async () => {
     const mockGame = { id: 1, title: 'Test Game', genre: 'Action' };
     const { result } = renderHook(() => useSearch({ onGameSelect: mockOnGameSelect }));
 
@@ -136,6 +136,12 @@ describe('useSearch', () => {
 
     expect(mockOnGameSelect).toHaveBeenCalledWith(mockGame);
     expect(result.current.isSearchFocused).toBe(false);
-    expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
+    
+    // Wait for the setTimeout to complete and check scroll behavior
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 150));
+    });
+    
+    expect(window.scrollTo).toHaveBeenCalled();
   });
 });

@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Trash2 } from 'lucide-react';
+import { Trash } from 'lucide-react';
 import ImageWithFallback from './ui/ImageWithFallback';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -33,7 +33,7 @@ const GameCard: React.FC<GameCardProps> = ({ game, onDelete, onClick }) => {
         type="button"
         aria-label={`Delete ${game.title}`}
       >
-        <Trash2 className="h-5 w-5" />
+        <Trash className="h-5 w-5" />
       </Button>
       
       {/* Game Image */}
