@@ -69,7 +69,7 @@ const ToastComponent: React.FC<ToastProps> = ({ toast, onRemove }) => {
   return (
     <div 
       className={cn(
-        "bg-background border rounded-lg shadow-lg p-4 min-w-80 max-w-96 pointer-events-auto transform transition-all duration-300",
+        "bg-background border rounded-lg shadow-lg p-4 min-w-96 max-w-lg pointer-events-auto transform transition-all duration-300",
         getBorderColor(),
         isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0",
         isLeaving && "translate-y-[-100px] opacity-0"
