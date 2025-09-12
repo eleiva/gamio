@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Game } from '@/types';
 import { useIGDB } from './useIGDB';
 import { useDebounce } from './useDebounce';
+import { SEARCH_RESULTS_LIMIT } from '@/lib/utils';
 
 interface UseSearchProps {
   onGameSelect: (game: Game) => void;
@@ -28,7 +29,7 @@ export const useSearch = ({ onGameSelect }: UseSearchProps) => {
       
       if (debouncedSearchTerm.trim().length >= 2) {
         try {
-          const results = await searchGames(debouncedSearchTerm, 10);
+          const results = await searchGames(debouncedSearchTerm, SEARCH_RESULTS_LIMIT);
           setSearchResults(results || []);
         } catch (err) {
           if (err instanceof Error && err.name === 'AbortError') {
@@ -62,7 +63,7 @@ export const useSearch = ({ onGameSelect }: UseSearchProps) => {
     setIsSearchFocused(true);
     if (popularGames.length === 0 && !isLoading) {
       try {
-        const popular = await getPopularGames(10);
+        const popular = await getPopularGames(SEARCH_RESULTS_LIMIT);
         if (popular) {
           setPopularGames(popular);
         }
@@ -88,6 +89,8 @@ export const useSearch = ({ onGameSelect }: UseSearchProps) => {
   const handleGameSelect = (game: Game): void => {
     onGameSelect(game);
     setIsSearchFocused(false);
+    // Scroll to top when selecting a game
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return {

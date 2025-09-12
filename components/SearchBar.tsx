@@ -1,7 +1,7 @@
 import React from 'react';
 import { Search, X } from 'lucide-react';
 import ImageWithFallback from './ui/ImageWithFallback';
-import { cn } from '@/lib/utils';
+import { cn, SEARCH_RESULTS_LIMIT } from '@/lib/utils';
 import { Game } from '@/types';
 
 interface SearchBarProps {
@@ -80,7 +80,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           aria-label="Search results"
         >
           <div className="p-1 md:p-2">
-            {searchResults.slice(0, 7).map(renderGameItem)}
+            {searchResults.slice(0, SEARCH_RESULTS_LIMIT).map(renderGameItem)}
           </div>
         </div>
       );
@@ -95,7 +95,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           aria-label="Popular games"
         >
           <div className="p-1 md:p-2">
-            {popularGames.slice(0, 7).map(renderGameItem)}
+            {popularGames.slice(0, SEARCH_RESULTS_LIMIT).map(renderGameItem)}
           </div>
         </div>
       );
