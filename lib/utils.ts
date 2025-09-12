@@ -7,3 +7,8 @@ export function cn(...inputs: ClassValue[]) {
 
 // Search configuration constants
 export const SEARCH_RESULTS_LIMIT = 6;
+
+// Mobile detection utility
+export const isMobileDevice = (): boolean => {
+  return typeof window !== 'undefined' && window.innerWidth < 768;
+};

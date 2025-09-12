@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Game } from '@/types';
 import { useIGDB } from './useIGDB';
 import { useDebounce } from './useDebounce';
-import { SEARCH_RESULTS_LIMIT } from '@/lib/utils';
+import { SEARCH_RESULTS_LIMIT, isMobileDevice } from '@/lib/utils';
 
 interface UseSearchProps {
   onGameSelect: (game: Game) => void;
@@ -89,8 +89,38 @@ export const useSearch = ({ onGameSelect }: UseSearchProps) => {
   const handleGameSelect = (game: Game): void => {
     onGameSelect(game);
     setIsSearchFocused(false);
-    // Scroll to top when selecting a game
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Scroll to top when selecting a game - mobile-optimized approach
+    const scrollToTop = () => {
+      const isMobile = isMobileDevice();
+      
+      // Use requestAnimationFrame for better timing with browser rendering
+      requestAnimationFrame(() => {
+        try {
+          if (isMobile) {
+            // Mobile-specific approach: Use instant scroll for better reliability
+            window.scrollTo(0, 0);
+            // Also try direct assignment for stubborn mobile browsers
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+          } else {
+            // Desktop: Try smooth scroll first
+            if ('scrollBehavior' in document.documentElement.style) {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+              window.scrollTo(0, 0);
+            }
+          }
+        } catch (error) {
+          // Fallback: Direct scrollTop assignment
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+        }
+      });
+    };
+    
+    // Small delay to ensure dropdown closes first
+    setTimeout(scrollToTop, isMobileDevice() ? 100 : 50);
   };
 
   return {
