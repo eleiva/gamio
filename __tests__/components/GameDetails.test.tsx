@@ -43,7 +43,7 @@ describe('GameDetails', () => {
   it('shows collect button initially', () => {
     render(<GameDetails game={mockGame} onClose={mockOnClose} />);
     
-    const collectButton = screen.getByRole('button', { name: /collect game/i });
+    const collectButton = screen.getByRole('button', { name: /add to collection/i });
     expect(collectButton).toBeInTheDocument();
     expect(collectButton).toHaveTextContent('Collect game');
   });
@@ -51,11 +51,11 @@ describe('GameDetails', () => {
   it('collects game when collect button is clicked', () => {
     render(<GameDetails game={mockGame} onClose={mockOnClose} />);
     
-    const collectButton = screen.getByRole('button', { name: /collect game/i });
+    const collectButton = screen.getByRole('button', { name: /add to collection/i });
     fireEvent.click(collectButton);
     
     // Check that the button text changes
-    expect(collectButton).toHaveTextContent('Collected');
+    expect(collectButton).toHaveTextContent('Game collected');
     
     // Check that the game is stored in localStorage
     const storedGames = localStorage.getItem('collectedGames');
@@ -79,8 +79,8 @@ describe('GameDetails', () => {
     
     render(<GameDetails game={mockGame} onClose={mockOnClose} />);
     
-    const collectButton = screen.getByRole('button', { name: /collected/i });
-    expect(collectButton).toHaveTextContent('Collected');
+    const collectButton = screen.getByRole('button', { name: /remove from collection/i });
+    expect(collectButton).toHaveTextContent('Game collected');
     
     fireEvent.click(collectButton);
     
@@ -109,7 +109,7 @@ describe('GameDetails', () => {
     
     render(<GameDetails game={mockGame} onClose={mockOnClose} />);
     
-    const collectButton = screen.getByRole('button', { name: /collected/i });
-    expect(collectButton).toHaveTextContent('Collected');
+    const collectButton = screen.getByRole('button', { name: /remove from collection/i });
+    expect(collectButton).toHaveTextContent('Game collected');
   });
 });
