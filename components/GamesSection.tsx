@@ -24,15 +24,6 @@ const GamesSection: React.FC<GamesSectionProps> = ({
   // Show sticky filter when there are enough games (more than 2 games for testing) and on mobile
   const shouldShowStickyFilter = showFilters && games.length > 2 && currentFilter && onFilterChange && onStickyFilterChange;
   
-  // Debug: log the conditions
-  console.log('Sticky filter conditions:', {
-    showFilters,
-    gamesLength: games.length,
-    currentFilter,
-    onFilterChange: !!onFilterChange,
-    onStickyFilterChange: !!onStickyFilterChange,
-    shouldShowStickyFilter
-  });
 
   useEffect(() => {
     if (!shouldShowStickyFilter) {

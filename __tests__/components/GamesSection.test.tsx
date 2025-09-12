@@ -213,4 +213,122 @@ describe('GamesSection', () => {
       expect(newestButton).toHaveClass('violet-button-active');
     });
   });
+
+  describe('Sticky filter functionality', () => {
+    const mockOnStickyFilterChange = jest.fn();
+
+    beforeEach(() => {
+      mockOnStickyFilterChange.mockClear();
+    });
+
+    it('does not show sticky filter when games.length <= 2', () => {
+      const fewGames = mockGames.slice(0, 1); // Only 1 game
+      
+      render(
+        <GamesSection
+          games={fewGames}
+          onDeleteGame={mockOnDeleteGame}
+          showFilters={true}
+          currentFilter="lastAdded"
+          onFilterChange={mockOnFilterChange}
+          onStickyFilterChange={mockOnStickyFilterChange}
+        />
+      );
+      
+      // Should not call onStickyFilterChange since games.length <= 2
+      expect(mockOnStickyFilterChange).not.toHaveBeenCalled();
+    });
+
+    it('does not show sticky filter when showFilters is false', () => {
+      render(
+        <GamesSection
+          games={mockGames}
+          onDeleteGame={mockOnDeleteGame}
+          showFilters={false}
+          currentFilter="lastAdded"
+          onFilterChange={mockOnFilterChange}
+          onStickyFilterChange={mockOnStickyFilterChange}
+        />
+      );
+      
+      expect(mockOnStickyFilterChange).not.toHaveBeenCalled();
+    });
+
+    it('does not show sticky filter when currentFilter is not provided', () => {
+      render(
+        <GamesSection
+          games={mockGames}
+          onDeleteGame={mockOnDeleteGame}
+          showFilters={true}
+          onFilterChange={mockOnFilterChange}
+          onStickyFilterChange={mockOnStickyFilterChange}
+        />
+      );
+      
+      expect(mockOnStickyFilterChange).not.toHaveBeenCalled();
+    });
+
+    it('does not show sticky filter when onFilterChange is not provided', () => {
+      render(
+        <GamesSection
+          games={mockGames}
+          onDeleteGame={mockOnDeleteGame}
+          showFilters={true}
+          currentFilter="lastAdded"
+          onStickyFilterChange={mockOnStickyFilterChange}
+        />
+      );
+      
+      expect(mockOnStickyFilterChange).not.toHaveBeenCalled();
+    });
+
+    it('does not show sticky filter when onStickyFilterChange is not provided', () => {
+      render(
+        <GamesSection
+          games={mockGames}
+          onDeleteGame={mockOnDeleteGame}
+          showFilters={true}
+          currentFilter="lastAdded"
+          onFilterChange={mockOnFilterChange}
+        />
+      );
+      
+      // Should not throw error or call any sticky filter functions
+      expect(mockOnStickyFilterChange).not.toHaveBeenCalled();
+    });
+
+    it('sets up scroll listener when all conditions are met', () => {
+      const addEventListenerSpy = jest.spyOn(window, 'addEventListener');
+      const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
+      
+      // Create more games to meet the condition (games.length > 2)
+      const moreGames = [
+        ...mockGames,
+        { ...mockGames[0], id: 3, title: 'Test Game 3' },
+        { ...mockGames[1], id: 4, title: 'Test Game 4' },
+        { ...mockGames[0], id: 5, title: 'Test Game 5' },
+        { ...mockGames[1], id: 6, title: 'Test Game 6' }
+      ]; // 6 games total
+      
+      const { unmount } = render(
+        <GamesSection
+          games={moreGames}
+          onDeleteGame={mockOnDeleteGame}
+          showFilters={true}
+          currentFilter="lastAdded"
+          onFilterChange={mockOnFilterChange}
+          onStickyFilterChange={mockOnStickyFilterChange}
+        />
+      );
+      
+      expect(addEventListenerSpy).toHaveBeenCalledWith('scroll', expect.any(Function), { passive: true });
+      
+      unmount();
+      
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('scroll', expect.any(Function));
+      
+      addEventListenerSpy.mockRestore();
+      removeEventListenerSpy.mockRestore();
+    });
+  });
 });
