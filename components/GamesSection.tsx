@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import GameCard from './GameCard';
 import FilterButtons from './ui/FilterButtons';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -15,10 +15,48 @@ const GamesSection: React.FC<GamesSectionProps> = ({
   showFilters = false,
   currentFilter,
   onFilterChange,
-  isLoading = false
+  isLoading = false,
+  onStickyFilterChange
 }) => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const filterRef = useRef<HTMLDivElement>(null);
+
+  // Show sticky filter when there are enough games (more than 2 games for testing) and on mobile
+  const shouldShowStickyFilter = showFilters && games.length > 2 && currentFilter && onFilterChange && onStickyFilterChange;
+  
+  // Debug: log the conditions
+  console.log('Sticky filter conditions:', {
+    showFilters,
+    gamesLength: games.length,
+    currentFilter,
+    onFilterChange: !!onFilterChange,
+    onStickyFilterChange: !!onStickyFilterChange,
+    shouldShowStickyFilter
+  });
+
+  useEffect(() => {
+    if (!shouldShowStickyFilter) {
+      return;
+    }
+
+    const handleScroll = () => {
+      if (!sectionRef.current || !filterRef.current) {
+        return;
+      }
+
+      const filterRect = filterRef.current.getBoundingClientRect();
+      
+      // Show sticky filter when the original filter is scrolled out of view
+      const shouldShow = filterRect.bottom < 0;
+      onStickyFilterChange(shouldShow);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [shouldShowStickyFilter, onStickyFilterChange]);
+
   return (
-    <section className={cn("w-full", className)}>
+    <section ref={sectionRef} className={cn("w-full", className)}>
       {/* Section Title */}
       <h2 className="text-3xl font-bold violet-title mb-8">
         {title}
@@ -26,10 +64,12 @@ const GamesSection: React.FC<GamesSectionProps> = ({
       
       {/* Filter Buttons */}
       {showFilters && currentFilter && onFilterChange && (
-        <FilterButtons
-          currentFilter={currentFilter}
-          onFilterChange={onFilterChange}
-        />
+        <div ref={filterRef}>
+          <FilterButtons
+            currentFilter={currentFilter}
+            onFilterChange={onFilterChange}
+          />
+        </div>
       )}
       
       {/* Games Grid, Loading State, or Empty State */}

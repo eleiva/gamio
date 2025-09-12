@@ -31,7 +31,7 @@ describe('SearchBar', () => {
   it('calls onChange when input value changes', () => {
     render(<SearchBar value="" onChange={mockOnChange} />);
     
-    const input = screen.getByRole('textbox');
+    const input = screen.getByRole('combobox');
     fireEvent.change(input, { target: { value: 'new search' } });
     
     expect(mockOnChange).toHaveBeenCalledTimes(1);
@@ -40,7 +40,11 @@ describe('SearchBar', () => {
   it('has proper accessibility attributes', () => {
     render(<SearchBar value="" onChange={mockOnChange} />);
     
-    const input = screen.getByRole('textbox');
+    const input = screen.getByRole('combobox');
     expect(input).toHaveAttribute('type', 'text');
+    expect(input).toHaveAttribute('role', 'combobox');
+    expect(input).toHaveAttribute('aria-label', 'Search games');
+    expect(input).toHaveAttribute('aria-haspopup', 'listbox');
+    expect(input).toHaveAttribute('aria-autocomplete', 'list');
   });
 });
