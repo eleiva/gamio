@@ -7,6 +7,12 @@ import { useDebounce } from '@/hooks/useDebounce';
 jest.mock('@/hooks/useIGDB');
 jest.mock('@/hooks/useDebounce');
 
+// Mock window.scrollTo
+Object.defineProperty(window, 'scrollTo', {
+  value: jest.fn(),
+  writable: true
+});
+
 const mockUseIGDB = useIGDB as jest.MockedFunction<typeof useIGDB>;
 const mockUseDebounce = useDebounce as jest.MockedFunction<typeof useDebounce>;
 
@@ -66,7 +72,7 @@ describe('useSearch', () => {
     });
 
     expect(result.current.isSearchFocused).toBe(true);
-    expect(mockGetPopularGames).toHaveBeenCalledWith(10);
+    expect(mockGetPopularGames).toHaveBeenCalledWith(6);
     
     // Wait for state updates to complete
     await act(async () => {
@@ -130,5 +136,6 @@ describe('useSearch', () => {
 
     expect(mockOnGameSelect).toHaveBeenCalledWith(mockGame);
     expect(result.current.isSearchFocused).toBe(false);
+    expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
   });
 });
